@@ -13,10 +13,7 @@
 				"
 				:showWarn="iptRule.name"
 			></ipt>
-			<div
-				class="m-verticalfy"
-				v-show="theme === 1 || theme === 2 || theme === 3"
-			>
+			<div class="m-verticalfy" v-show="theme === 1 || theme === 2 || theme === 3">
 				<ipt
 					:value="userData.psw"
 					placeholder="验证码"
@@ -42,7 +39,7 @@
 				type="password"
 				v-show="theme !== 3"
 			></ipt>
-			<div class="login-btn" v-show="theme === 0 || theme === 3">登录</div>
+			<div class="login-btn" @click="login" v-show="theme === 0 || theme === 3">登录</div>
 			<div class="login-btn" v-show="theme === 1">修改</div>
 			<div class="login-btn" v-show="theme === 2">注册</div>
 			<div class="change-type-box">
@@ -67,6 +64,18 @@
 				</div>
 			</div>
 		</el-form>
+		<div class="desc">
+			<div class="left">
+				<div class="title">趴趴英语， 一站式备考服务</div>
+				<div class="con">
+					收录10000+道出国留学类考试真题、权威模拟题、独家试题
+					<br />提供全方位在线练习方式，搭配独家解析，名师答疑互动，高效率加速你的备考
+				</div>
+			</div>
+			<div class="right">
+				<img src="https://img.papaen.com/exam/login_pic.png" alt />
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -74,7 +83,7 @@
 import ipt from '@/components/ipt'
 export default {
 	components: {
-		ipt
+		ipt,
 	},
 	computed: {},
 	data: () => {
@@ -83,13 +92,13 @@ export default {
 			userData: {
 				name: '',
 				psw: '',
-				vertical: ''
+				vertical: '',
 			},
 			iptRule: {
 				name: false,
 				psw: false,
-				vertical: false
-			}
+				vertical: false,
+			},
 		}
 	},
 	methods: {
@@ -121,7 +130,10 @@ export default {
 					}
 					break
 			}
-		}
+		},
+		login() {
+			this.$router.replace('/')
+		},
 	},
 	filters: {
 		// 控制theme文字
@@ -136,8 +148,8 @@ export default {
 				case 3:
 					return '验证码快捷登录'
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 
@@ -235,6 +247,34 @@ export default {
 	.m-verticalfy {
 		margin-bottom: 20px;
 		display: flex;
+	}
+	.desc {
+		width: 1040px;
+		margin: 200px auto 50px;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		.left {
+			text-align: left;
+			margin-right: 180px;
+			.title {
+				font-size: 20px;
+				color: #4d4d4d;
+				font-weight: 500;
+				margin-bottom: 36px;
+			}
+			.con {
+				line-height: 32px;
+				font-size: 14px;
+				color: grey;
+			}
+		}
+		.right {
+			width: 330px;
+		}
 	}
 }
 </style>
