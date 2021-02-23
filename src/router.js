@@ -22,6 +22,12 @@ export default new Router({
     }, {
       path: 'confirm',
       component: () => import('@/views/ExamPage/confirm')
+    }, {
+      path: 'testSound',
+      component: () => import('@/views/ExamPage/testSound')
+    }, {
+      path: 'topic',
+      component: () => import('@/views/Topic'),
     }]
   }]
 });

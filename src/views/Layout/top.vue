@@ -31,7 +31,7 @@ export default {
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 10px 22px;
-	height: 80px;
+	height: 70px;
 	background-image: linear-gradient(0deg, #152531, #434c51, #152531);
 	.user {
 		display: flex;

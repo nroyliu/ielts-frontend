@@ -41,7 +41,7 @@ const instance = axios.create({
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
 	// 生产环境默认地址
-	instance.defaults.baseURL = 'https://api.papaen.com/v1/exam/papers/115/listening'
+	instance.defaults.baseURL = `	http://localhost:8080/listening.json`
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境默认地址
 	instance.defaults.baseURL = 'https://api.forbiger.com'
@@ -113,7 +113,7 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
 	(res) => {
-		return Promise.resolve(res)
+		return Promise.resolve(res.data.data)
 	},
 	(err) => {
 		return Promise.reject(err.response)

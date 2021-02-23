@@ -29,6 +29,19 @@
 	</div>
 </template>
 
+<script>
+export default {
+	data() {
+		return {}
+	},
+	methods: {
+		goConfirm() {
+			this.$router.push('/main/topic')
+		},
+	},
+}
+</script>
+
 <style lang="less" scoped>
 .wrapper {
 	margin-top: 80px;

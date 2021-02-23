@@ -32,7 +32,7 @@ export default {
 	},
 	methods: {
 		goConfirm() {
-			this.$router.push('/main/confirm')
+			this.$router.push('/main/testSound')
 		},
 	},
 }

@@ -4,8 +4,14 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+import {
+  markdown
+} from 'markdown'
+
 
 Vue.config.productionTip = false;
+
+Vue.prototype.$markdown = markdown
 
 Vue.use(ElementUI);
 
