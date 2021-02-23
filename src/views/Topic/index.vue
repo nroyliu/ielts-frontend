@@ -1,10 +1,13 @@
 <template>
 	<div class="warapper">
 		<div class="c_partBar col mb-2 title">
-			<h3>Part {{currentPart}}</h3>
+			<h3>Part {{ currentPart }}</h3>
 		</div>
-		<sound v-show="currentPart === 1"></sound>
-		<foot @partChaneg="currentPart = + $event"></foot>
+		<div class="single-page" v-if="currentSection === 'sound'">
+			<sound ref="sound"></sound>
+		</div>
+		<div class="double-page"></div>
+		<foot @partChange="partChange"></foot>
 	</div>
 </template>
 
@@ -14,18 +17,34 @@ import foot from './options'
 export default {
 	components: {
 		sound,
-		foot,
+		foot
 	},
 	data() {
 		return {
 			topic: [],
 			currentPart: 1,
+			currentSection: 'sound'
+		}
+	},
+	watch: {
+		currentPart(val, old) {
+			if (val !== old) {
+				this.$refs.sound.currentPart = this.currentPart
+			}
 		}
 	},
 	mounted() {
-		this.topic = JSON.parse(sessionStorage.topic)
+		this.$utils.setSession('currentSection', 'sound')
+		this.topic = this.$utils.getSession('topic')
+		this.currentSection = this.$utils.getSession('currentSection')
+		this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
-	methods: {},
+	methods: {
+		partChange(e) {
+			this.currentPart = +e
+			this.$refs.sound.groups = this.topic[this.currentPart - 1]
+		}
+	}
 }
 </script>
 
@@ -47,6 +66,17 @@ export default {
 		h3 {
 			font-weight: normal;
 		}
+	}
+	.single-page {
+		margin-top: 10px;
+		padding: 15px !important;
+		width: 100%;
+		height: 645px;
+		background-image: linear-gradient(0deg, #fff, #dde3ee);
+		overflow: auto;
+		box-shadow: 0 0.0714em 0.214em rgba(0, 0, 0, 0.25);
+		border-radius: 8px;
+		box-sizing: border-box;
 	}
 }
 </style>

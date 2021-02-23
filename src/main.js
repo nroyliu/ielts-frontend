@@ -9,9 +9,12 @@ import {
 } from 'markdown'
 
 
+import utils from '@/utils/common'
+
 Vue.config.productionTip = false;
 
 Vue.prototype.$markdown = markdown
+Vue.prototype.$utils = utils
 
 Vue.use(ElementUI);
 

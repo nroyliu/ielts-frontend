@@ -7,22 +7,41 @@
 			<div class="txt">Review</div>
 		</div>
 		<div class="m-option-list">
-			<ul v-for="(item,index) in topic" :key="index">
-				<li class="m-part">Part{{index+1}}:</li>
-				<li class v-for="(item,index1) in topic[index].groups" :key="index1">
+			<ul v-for="(item, index) in topic" :key="index">
+				<li class="m-part">Part{{ index + 1 }}:</li>
+				<li class v-for="(item, index1) in topic[index].groups" :key="index1">
 					<div
 						class="program"
-						:class="{'blue': currentPage === (pagegation.indexOf(topic[index].groups[index1].questions[index2].id)+1)}"
+						:class="{
+							blue:
+								currentPage ===
+								pagegation.indexOf(
+									topic[index].groups[index1].questions[index2].id
+								) +
+									1
+						}"
 						style="display:inline-block"
-						v-for="(item,index2) in topic[index].groups[index1].questions"
+						v-for="(item, index2) in topic[index].groups[index1].questions"
 						:key="index2"
 					>
-						<!-- 123对应part-->
+						<!-- 题目所对应part-->
 						<a
 							:ref="`${topic[index].groups[index1].questions[index2].id}`"
 							:href="`#${topic[index].groups[index1].questions[index2].id}`"
-							@click="selectItem(pagegation.indexOf(topic[index].groups[index1].questions[index2].id))"
-						>{{pagegation.indexOf(topic[index].groups[index1].questions[index2].id)+1}}</a>
+							@click="
+								selectItem(
+									pagegation.indexOf(
+										topic[index].groups[index1].questions[index2].id
+									)
+								)
+							"
+						>
+							{{
+								pagegation.indexOf(
+									topic[index].groups[index1].questions[index2].id
+								) + 1
+							}}
+						</a>
 					</div>
 				</li>
 			</ul>
@@ -46,7 +65,7 @@ export default {
 			topic: [],
 			pagegation: [],
 			currentPage: 1,
-			part: {},
+			part: {}
 		}
 	},
 	mounted() {
@@ -60,26 +79,28 @@ export default {
 				})
 			})
 		})
+		this.$utils.setSession('pagegation', this.pagegation)
+		this.$utils.setSession('part', this.part)
 	},
 	methods: {
 		// 选择
 		selectItem(index) {
 			this.currentPage = index + 1
-			this.$emit('partChaneg', this.filterPart(this.pagegation[index]))
+			this.$emit('partChange', this.filterPart(this.pagegation[index]))
 		},
 		// 下一题
 		pre() {
 			if (this.currentPage == 1) return
 			let key = this.pagegation[this.currentPage - 2]
 			this.$refs[key][0].click()
-			this.$emit('partChaneg', this.filterPart(key))
+			this.$emit('partChange', this.filterPart(key))
 		},
 		// 上一题
 		next() {
 			if (this.currentPage === this.pagegation.length) return
 			let key = this.pagegation[this.currentPage]
 			this.$refs[key][0].click()
-			this.$emit('partChaneg', this.filterPart(key))
+			this.$emit('partChange', this.filterPart(key))
 		},
 		// 返回当前题目在那一部分
 		filterPart(id) {
@@ -88,8 +109,8 @@ export default {
 					return key
 				}
 			}
-		},
-	},
+		}
+	}
 }
 </script>
 
