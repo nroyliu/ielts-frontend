@@ -60,6 +60,9 @@
 <script>
 export default {
 	filter: {},
+	props: {
+		// topic
+	},
 	data() {
 		return {
 			topic: [],

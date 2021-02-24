@@ -3,8 +3,18 @@
 		<div class="c_partBar col mb-2 title">
 			<h3>Part {{ currentPart }}</h3>
 		</div>
-		<div class="single-page" v-if="currentSection === 'sound'">
-			<sound ref="sound"></sound>
+		<div class="single-page">
+			<div
+				v-show="currentSection === 'sound'"
+				v-for="(item, index) in topic"
+				:key="index"
+			>
+				<sound
+					ref="sound"
+					:groups="topic[index]"
+					v-show="currentPart === index + 1"
+				></sound>
+			</div>
 		</div>
 		<div class="double-page"></div>
 		<foot @partChange="partChange"></foot>
@@ -37,7 +47,7 @@ export default {
 		this.$utils.setSession('currentSection', 'sound')
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = this.$utils.getSession('currentSection')
-		this.$refs.sound.groups = this.topic[this.currentPart - 1]
+		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
 	methods: {
 		partChange(e) {

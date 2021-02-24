@@ -6,21 +6,58 @@
 				Questions {{ getSection(groups.groups[index].questions) }}
 			</div>
 			<pre class="description" v-html="getHtml(item.description)"></pre>
+			<!-- type == 32 听力填空 -->
 			<div
 				class="box type32"
-				v-if="item.type === 32 && !~item.content.indexOf('table')"
+				v-show="item.type === 32 && !~item.content.indexOf('table')"
 			>
 				<pre><div class="content markdown-body"  v-html="getHtml(item.content)"></div></pre>
 			</div>
+			<!-- type == 32 并且 富文本有表单 -->
 			<div
 				class="box type32"
-				v-if="item.type === 32 && ~item.content.indexOf('table')"
+				v-show="item.type === 32 && ~item.content.indexOf('table')"
 			>
 				<pre class="table">
-					<div class="markdown-body" v-html="getHtml(item.content)">
-
-					</div>
+					<div class="markdown-body" v-html="getHtml(item.content)"></div>
 				</pre>
+			</div>
+			<!-- 听力单选 type 11 -->
+			<div class="m-type11" v-if="item.type === 11">
+				<div
+					class="single-page-s-s"
+					v-for="(selectItem, selectIndex) in groups.groups[index].questions"
+					:key="selectItem.id"
+				>
+					<div class="topic">
+						<div class="num">{{ getIndex(selectItem.id) }}</div>
+						<div class="topic-txt">
+							What is the main thing Julia feels she has gained from her
+							experience in retail?
+						</div>
+					</div>
+
+					<div
+						class="option"
+						:id="groups.groups[index].questions[selectIndex].id"
+					>
+						<singleOption
+							:item="groups.groups[index].questions[selectIndex]"
+							@changeData="mergeData"
+						></singleOption>
+					</div>
+				</div>
+			</div>
+			<!-- 听力表格填写 -->
+			<div class="type34" v-if="item.type === 34 && item.mode !== 341">
+				<listenImageTable
+					:item="groups.groups[index]"
+					@changeData="mergeData"
+				></listenImageTable>
+			</div>
+			<!-- 拖拽 -->
+			<div class="type34" v-if="item.type === 34 && item.mode == 341">
+				<dragComponent :dragData="groups.groups[index]"></dragComponent>
 			</div>
 		</div>
 	</div>
@@ -28,13 +65,25 @@
 
 <script>
 import marked from 'marked'
+import singleOption from '../../components/singleOption'
+import listenImageTable from '../../components/listenImageTable'
+import dragComponent from '../../components/dragComponent'
 export default {
+	components: {
+		singleOption,
+		listenImageTable,
+		dragComponent
+	},
+	props: {
+		groups: Object //保存part数据
+	},
 	data() {
 		return {
-			groups: [], //保存part数据
+			// groups: [],
 			currentPart: 1, //当前 part
 			pagegation: [], // 题目id 列表
-			part: {} //{part1:...part2:...}
+			part: {}, //{part1:...part2:...}
+			answer: {}
 		}
 	},
 	watch: {
@@ -59,13 +108,20 @@ export default {
 		getSection(arr) {
 			let begin = this.pagegation.indexOf(arr[0].id)
 			let end = this.pagegation.indexOf(arr[arr.length - 1].id)
-			console.log(arr[0].id, arr[arr.length - 1].id)
 			return `${begin + 1} - ${end + 1}`
 		},
 		// 获取html格式
 		getHtml(markdown) {
-			console.log(markdown)
 			return marked(markdown)
+		},
+		// 获取当前题号
+		getIndex(id) {
+			return this.pagegation.indexOf(id) + 1
+		},
+		// 拼接对象
+		mergeData(obj) {
+			Object.assign(this.answer, obj)
+			console.log(this.answer)
 		}
 	}
 }
@@ -125,5 +181,19 @@ td {
 	padding: 5px;
 	vertical-align: top;
 	border: 1px solid #000;
+}
+
+.m-type11 {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	.topic {
+		display: flex;
+		color: #212529;
+		font-size: 18px;
+		.num {
+			margin-right: 10px;
+		}
+	}
 }
 </style>
