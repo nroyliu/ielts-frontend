@@ -2,7 +2,9 @@
 	<div>
 		<div class="doublePage">
 			<div class="left-content">
-				<div class="markdown-body" v-html="content"></div>
+				<div>
+					<div class="markdown-body" v-html="content"></div>
+				</div>
 			</div>
 			<div class="right-content">
 				<div class="m-part" v-for="(item, index) in topic.groups" :key="index">
