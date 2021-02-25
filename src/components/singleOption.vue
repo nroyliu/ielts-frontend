@@ -1,14 +1,15 @@
 <template>
 	<!-- 单选组件 返回一个 {[topic.id]: option} -->
 	<div>
-		<el-radio-group v-model="radio" @change="selectChange">
+		<el-radio-group v-model="radio" v-if="!isReadType34" @change="selectChange">
 			<el-radio
 				:label="item1.option"
 				v-for="item1 in item.options"
 				:key="item1.option"
-			>
-				{{ item1.text }}
-			</el-radio>
+			>{{ item1.text }}</el-radio>
+		</el-radio-group>
+		<el-radio-group v-model="radio" v-if="isReadType34" @change="selectChange">
+			<el-radio :label="item1.option" v-for="item1 in arr" :key="item1.option">{{ item1.text }}</el-radio>
 		</el-radio-group>
 	</div>
 </template>
@@ -16,23 +17,51 @@
 <script>
 export default {
 	props: {
-		item: Object
+		item: {
+			type: Object,
+			default() {
+				return {}
+			},
+		},
+		arr: {
+			type: Array,
+			default() {
+				return []
+			},
+		},
+		isReadType34: {
+			type: Boolean,
+			default() {
+				return false
+			},
+		},
+		id: {
+			type: Number,
+			default() {
+				return 0
+			},
+		},
 	},
 	data() {
 		return {
 			radio: '',
-			obj: {}
+			obj: {},
 		}
 	},
 	methods: {
 		selectChange(e) {
-			this.obj[this.item.id] = e
+			this.obj[this.id] = e
 			this.$emit('changeData', this.obj)
-		}
+		},
 	},
 	created() {
-		this.obj[this.item.id] = ''
-	}
+		console.log(this.arr)
+		if (this.id) {
+			this.obj[this.id] = ''
+		} else {
+			this.obj[this.item.id] = ''
+		}
+	},
 }
 </script>
 

@@ -1,13 +1,10 @@
 <template>
 	<div class="listenImageTable">
-		<div class="part markdown-body" v-html="topic"></div>
-		<div class="part">
-			<table
-				style="border: 1px solid #ccc;"
-				border="1"
-				cellspacing="0"
-				cellpadding="0"
-			>
+		<div class="part" v-if="!isRead">
+			<div class="part markdown-body" v-html="topic"></div>
+		</div>
+		<div class="part" :class="{'isRead': isRead}">
+			<table style="border: 1px solid #ccc;" border="1" cellspacing="0" cellpadding="0">
 				<thead>
 					<tr>
 						<th></th>
@@ -19,9 +16,7 @@
 				<tbody>
 					<tr v-for="trItem in item.questions" :key="trItem.id">
 						<td>
-							<span class="title">
-								{{ `${pagegation.indexOf(trItem.id) + 1}.  ${trItem.content}` }}
-							</span>
+							<span class="title">{{ `${pagegation.indexOf(trItem.id) + 1}. ${trItem.content}` }}</span>
 						</td>
 						<td v-for="(item, index) in item.options" :key="index">
 							<div class="icon" v-if="obj">
@@ -44,13 +39,19 @@
 import marked from 'marked'
 export default {
 	props: {
-		item: Object
+		item: Object,
+		isRead: {
+			type: Boolean,
+			default() {
+				return false
+			},
+		},
 	},
 	data() {
 		return {
 			topic: '',
 			obj: {},
-			pagegation: []
+			pagegation: [],
 		}
 	},
 	mounted() {
@@ -64,9 +65,10 @@ export default {
 	methods: {
 		getCurrent(e, id) {
 			this.obj[id] = e.target.defaultValue
+			console.log(this.obj)
 			this.$emit('changeData', this.obj)
-		}
-	}
+		},
+	},
 }
 </script>
 
@@ -79,8 +81,10 @@ export default {
 		.markdown-body img {
 		}
 	}
+	.isRead {
+		width: 100%;
+	}
 	div:nth-child(1) {
-		// flex: 0.6;
 	}
 
 	.title {

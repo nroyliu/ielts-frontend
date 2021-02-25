@@ -41,7 +41,8 @@ const instance = axios.create({
 // 环境的切换
 if (process.env.NODE_ENV === 'development') {
 	// 生产环境默认地址
-	instance.defaults.baseURL = `	http://localhost:8080/listening.json`
+	// instance.defaults.baseURL = `	http://localhost:8080/listening.json`
+	instance.defaults.baseURL = `	http://localhost:8080/reading.json`
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境默认地址
 	instance.defaults.baseURL = 'https://api.forbiger.com'

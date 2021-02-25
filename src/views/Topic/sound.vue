@@ -2,22 +2,14 @@
 	<div class="sound">
 		<!-- 单篇界面 -->
 		<div class="m-part" v-for="(item, index) in groups.groups" :key="index">
-			<div class="section">
-				Questions {{ getSection(groups.groups[index].questions) }}
-			</div>
+			<div class="section">Questions {{ getSection(groups.groups[index].questions) }}</div>
 			<pre class="description" v-html="getHtml(item.description)"></pre>
 			<!-- type == 32 听力填空 -->
-			<div
-				class="box type32"
-				v-show="item.type === 32 && !~item.content.indexOf('table')"
-			>
-				<pre><div class="content markdown-body"  v-html="getHtml(item.content)"></div></pre>
+			<div class="box type32" v-show="item.type === 32 && !~item.content.indexOf('table')">
+				<pre><div class="content markdown-body" v-html="getHtml(item.content)"></div></pre>
 			</div>
 			<!-- type == 32 并且 富文本有表单 -->
-			<div
-				class="box type32"
-				v-show="item.type === 32 && ~item.content.indexOf('table')"
-			>
+			<div class="box type32" v-show="item.type === 32 && ~item.content.indexOf('table')">
 				<pre class="table">
 					<div class="markdown-body" v-html="getHtml(item.content)"></div>
 				</pre>
@@ -31,33 +23,21 @@
 				>
 					<div class="topic">
 						<div class="num">{{ getIndex(selectItem.id) }}</div>
-						<div class="topic-txt">
-							What is the main thing Julia feels she has gained from her
-							experience in retail?
-						</div>
+						<div class="topic-txt">{{selectItem.content}}</div>
 					</div>
 
-					<div
-						class="option"
-						:id="groups.groups[index].questions[selectIndex].id"
-					>
-						<singleOption
-							:item="groups.groups[index].questions[selectIndex]"
-							@changeData="mergeData"
-						></singleOption>
+					<div class="option" :id="groups.groups[index].questions[selectIndex].id">
+						<singleOption :item="groups.groups[index].questions[selectIndex]" @changeData="mergeData"></singleOption>
 					</div>
 				</div>
 			</div>
 			<!-- 听力表格填写 -->
 			<div class="type34" v-if="item.type === 34 && item.mode !== 341">
-				<listenImageTable
-					:item="groups.groups[index]"
-					@changeData="mergeData"
-				></listenImageTable>
+				<listenImageTable :item="groups.groups[index]" @changeData="mergeData"></listenImageTable>
 			</div>
 			<!-- 拖拽 -->
 			<div class="type34" v-if="item.type === 34 && item.mode == 341">
-				<dragComponent :dragData="groups.groups[index]"></dragComponent>
+				<dragComponent :dragData="groups.groups[index]" @changeData="mergeData"></dragComponent>
 			</div>
 		</div>
 	</div>
@@ -72,10 +52,10 @@ export default {
 	components: {
 		singleOption,
 		listenImageTable,
-		dragComponent
+		dragComponent,
 	},
 	props: {
-		groups: Object //保存part数据
+		groups: Object, //保存part数据
 	},
 	data() {
 		return {
@@ -83,14 +63,14 @@ export default {
 			currentPart: 1, //当前 part
 			pagegation: [], // 题目id 列表
 			part: {}, //{part1:...part2:...}
-			answer: {}
+			answer: {},
 		}
 	},
 	watch: {
 		currentPart(val) {
 			this.pagegation = this.$utils.getSession('pagegation')
 			this.part = this.$utils.getSession('part')
-		}
+		},
 	},
 	mounted() {
 		this.pagegation = this.$utils.getSession('pagegation')
@@ -121,9 +101,8 @@ export default {
 		// 拼接对象
 		mergeData(obj) {
 			Object.assign(this.answer, obj)
-			console.log(this.answer)
-		}
-	}
+		},
+	},
 }
 </script>
 

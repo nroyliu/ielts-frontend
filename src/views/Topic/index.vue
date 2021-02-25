@@ -3,20 +3,16 @@
 		<div class="c_partBar col mb-2 title">
 			<h3>Part {{ currentPart }}</h3>
 		</div>
-		<div class="single-page">
-			<div
-				v-show="currentSection === 'sound'"
-				v-for="(item, index) in topic"
-				:key="index"
-			>
-				<sound
-					ref="sound"
-					:groups="topic[index]"
-					v-show="currentPart === index + 1"
-				></sound>
+		<div class="single-page" v-if="currentSection === 'sound'">
+			<div v-for="(item, index) in topic" :key="index">
+				<sound ref="sound" :groups="topic[index]" v-show="currentPart === index + 1"></sound>
 			</div>
 		</div>
-		<div class="double-page"></div>
+		<div class="double-page" v-if="currentSection === 'read'">
+			<div v-for="(item1, index1) in topic" :key="index1">
+				<read ref="read" :topic="topic[index1]" v-show="currentPart === index1 + 1"></read>
+			</div>
+		</div>
 		<foot @partChange="partChange"></foot>
 	</div>
 </template>
@@ -24,27 +20,36 @@
 <script>
 import sound from './sound'
 import foot from './options'
+import read from './read'
 export default {
 	components: {
 		sound,
-		foot
+		foot,
+		read,
 	},
 	data() {
 		return {
 			topic: [],
 			currentPart: 1,
-			currentSection: 'sound'
+			currentSection: 'sound',
 		}
 	},
 	watch: {
 		currentPart(val, old) {
 			if (val !== old) {
-				this.$refs.sound.currentPart = this.currentPart
+				switch (this.currentSection) {
+					case 'sound':
+						this.$refs.sound.currentPart = this.currentPart
+						break
+					case 'read':
+						this.$refs.read.currentPart = this.currentPart
+						break
+				}
 			}
-		}
+		},
 	},
 	mounted() {
-		this.$utils.setSession('currentSection', 'sound')
+		this.$utils.setSession('currentSection', 'read')
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = this.$utils.getSession('currentSection')
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
@@ -52,9 +57,16 @@ export default {
 	methods: {
 		partChange(e) {
 			this.currentPart = +e
-			this.$refs.sound.groups = this.topic[this.currentPart - 1]
-		}
-	}
+			switch (this.currentSection) {
+				case 'sound':
+					this.$refs.sound.groups = this.topic[this.currentPart - 1]
+					break
+				case 'read':
+					this.$refs.read.groups = this.topic[this.currentPart - 1]
+					break
+			}
+		},
+	},
 }
 </script>
 
@@ -82,6 +94,16 @@ export default {
 		padding: 15px !important;
 		width: 100%;
 		height: 645px;
+		background-image: linear-gradient(0deg, #fff, #dde3ee);
+		overflow: auto;
+		box-shadow: 0 0.0714em 0.214em rgba(0, 0, 0, 0.25);
+		border-radius: 8px;
+		box-sizing: border-box;
+	}
+	.double-page {
+		margin-top: 10px;
+		padding: 15px !important;
+		width: 100%;
 		background-image: linear-gradient(0deg, #fff, #dde3ee);
 		overflow: auto;
 		box-shadow: 0 0.0714em 0.214em rgba(0, 0, 0, 0.25);
