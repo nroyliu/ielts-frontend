@@ -14,7 +14,9 @@
 				:name="item1.option"
 				@mousedown="dragStart(index)"
 			>
-				<span v-if="!idObj[item1.option]">{{ `${item1.option}. ${item1.text}` }}</span>
+				<span v-if="!idObj[item1.option]">
+					{{ `${item1.option}. ${item1.text}` }}
+				</span>
 			</div>
 		</div>
 	</div>
@@ -51,7 +53,7 @@ function dragLeave(e) {
 
 const Vue = {
 	props: {
-		dragData: Object,
+		dragData: Object
 	},
 	data() {
 		return {
@@ -59,7 +61,7 @@ const Vue = {
 			pagegation: [],
 			currentIndex: 0,
 			idObj: {},
-			arr: [],
+			arr: []
 		}
 	},
 	computed: {},
@@ -68,7 +70,7 @@ const Vue = {
 		dragStart(index) {
 			currentIndex = index
 			this.currentIndex = index
-		},
+		}
 	},
 	created() {
 		this.pagegation = this.$utils.getSession('pagegation')
@@ -77,9 +79,8 @@ const Vue = {
 			questions.forEach((item) => {
 				let obj = marked(item.content).replace(
 					'[d[=NO=]]',
-					`<h5 style="margin:0 6px 15px">${
-						this.pagegation.indexOf(item.id) + 1
-					}.</h5 ><div class="ondrag" style="margin:0 6px 15px"  draggable="false" id="${
+					`<h5 style="margin:0 6px 15px">${this.pagegation.indexOf(item.id) +
+						1}.</h5 ><div class="ondrag" style="margin:0 6px 15px"  draggable="false" id="${
 						item.id
 					}"></div>`
 				)
@@ -135,7 +136,7 @@ const Vue = {
 				droppable.addEventListener('drop', dragDrop)
 			})
 		})
-	},
+	}
 }
 export default Vue
 </script>

@@ -2,16 +2,24 @@
 	<div class="sound">
 		<!-- 单篇界面 -->
 		<div class="m-part" v-for="(item, index) in groups.groups" :key="index">
-			<div class="section">Questions {{ getSection(groups.groups[index].questions) }}</div>
+			<div class="section">
+				Questions {{ getSection(groups.groups[index].questions) }}
+			</div>
 			<pre class="description" v-html="getHtml(item.description)"></pre>
 			<!-- type == 32 听力填空 -->
-			<div class="box type32" v-show="item.type === 32 && !~item.content.indexOf('table')">
-				<pre><div class="content markdown-body" v-html="getHtml(item.content)"></div></pre>
+			<div
+				class="box type32"
+				v-show="item.type === 32 && !~item.content.indexOf('table')"
+			>
+				<pre><div class="content markdown-body" v-html="getHtml(item.content,item)"></div></pre>
 			</div>
 			<!-- type == 32 并且 富文本有表单 -->
-			<div class="box type32" v-show="item.type === 32 && ~item.content.indexOf('table')">
+			<div
+				class="box type32"
+				v-show="item.type === 32 && ~item.content.indexOf('table')"
+			>
 				<pre class="table">
-					<div class="markdown-body" v-html="getHtml(item.content)"></div>
+					<div class="markdown-body" v-html="getHtml(item.content,item)"></div>
 				</pre>
 			</div>
 			<!-- 听力单选 type 11 -->
@@ -23,21 +31,33 @@
 				>
 					<div class="topic">
 						<div class="num">{{ getIndex(selectItem.id) }}</div>
-						<div class="topic-txt">{{selectItem.content}}</div>
+						<div class="topic-txt">{{ selectItem.content }}</div>
 					</div>
 
-					<div class="option" :id="groups.groups[index].questions[selectIndex].id">
-						<singleOption :item="groups.groups[index].questions[selectIndex]" @changeData="mergeData"></singleOption>
+					<div
+						class="option"
+						:id="groups.groups[index].questions[selectIndex].id"
+					>
+						<singleOption
+							:item="groups.groups[index].questions[selectIndex]"
+							@changeData="mergeData"
+						></singleOption>
 					</div>
 				</div>
 			</div>
 			<!-- 听力表格填写 -->
 			<div class="type34" v-if="item.type === 34 && item.mode !== 341">
-				<listenImageTable :item="groups.groups[index]" @changeData="mergeData"></listenImageTable>
+				<listenImageTable
+					:item="groups.groups[index]"
+					@changeData="mergeData"
+				></listenImageTable>
 			</div>
 			<!-- 拖拽 -->
 			<div class="type34" v-if="item.type === 34 && item.mode == 341">
-				<dragComponent :dragData="groups.groups[index]" @changeData="mergeData"></dragComponent>
+				<dragComponent
+					:dragData="groups.groups[index]"
+					@changeData="mergeData"
+				></dragComponent>
 			</div>
 		</div>
 	</div>
@@ -52,10 +72,10 @@ export default {
 	components: {
 		singleOption,
 		listenImageTable,
-		dragComponent,
+		dragComponent
 	},
 	props: {
-		groups: Object, //保存part数据
+		groups: Object //保存part数据
 	},
 	data() {
 		return {
@@ -64,13 +84,14 @@ export default {
 			pagegation: [], // 题目id 列表
 			part: {}, //{part1:...part2:...}
 			answer: {},
+			fillIdList: [] //保存 填空 id 列表
 		}
 	},
 	watch: {
 		currentPart(val) {
 			this.pagegation = this.$utils.getSession('pagegation')
 			this.part = this.$utils.getSession('part')
-		},
+		}
 	},
 	mounted() {
 		this.pagegation = this.$utils.getSession('pagegation')
@@ -81,6 +102,20 @@ export default {
 		link.href =
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
+
+		// 原生js操作
+		this.$nextTick(() => {
+			this.fillIdList.forEach((item, index) => {
+				if (document.getElementsByName(item)) {
+					let eleList = document.getElementsByName(item)
+					eleList.forEach((item1) => {
+						item1.addEventListener('keyup', (e) => {
+							this.mergeData({ [item]: e.target.value })
+						})
+					})
+				}
+			})
+		})
 	},
 	filters: {},
 	methods: {
@@ -91,8 +126,22 @@ export default {
 			return `${begin + 1} - ${end + 1}`
 		},
 		// 获取html格式
-		getHtml(markdown) {
-			return marked(markdown)
+		getHtml(markdown, item = '') {
+			let txt = marked(markdown)
+			if (item) {
+				item.questions.forEach((item1, index) => {
+					txt = txt.replace(
+						'[i[=NO=]]',
+						`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+							item1.id
+						}" placeholder="${this.getIndex(item1.id)}" />`
+					)
+					if (!~this.fillIdList.indexOf(item1.id)) {
+						this.fillIdList.push(item1.id)
+					}
+				})
+			}
+			return txt
 		},
 		// 获取当前题号
 		getIndex(id) {
@@ -101,12 +150,27 @@ export default {
 		// 拼接对象
 		mergeData(obj) {
 			Object.assign(this.answer, obj)
-		},
-	},
+		}
+	}
 }
 </script>
 
 <style lang="less" scoped>
+.ipt-listen {
+	min-width: 100px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #333;
+	color: #333;
+	text-align: center;
+}
+.ipt-listen::placeholder,
+.ipt-listen::-ms-input-placeholder,
+.ipt-listen::-moz-input-placeholder,
+.ipt-listen::-webkit-input-placeholder,
+.ipt-listen::-o-input-placeholder {
+	text-align: center;
+}
 .sound {
 	padding: 0 17px;
 	font-size: 20px;
@@ -162,8 +226,14 @@ td {
 	border: 1px solid #000;
 }
 
+.single-page-s-s {
+	width: 50%;
+	margin-bottom: 10px;
+}
+
 .m-type11 {
 	display: flex;
+	grid-template-columns: repeat(2);
 	flex-wrap: wrap;
 	justify-content: space-between;
 	.topic {

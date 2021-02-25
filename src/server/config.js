@@ -42,7 +42,8 @@ const instance = axios.create({
 if (process.env.NODE_ENV === 'development') {
 	// 生产环境默认地址
 	// instance.defaults.baseURL = `	http://localhost:8080/listening.json`
-	instance.defaults.baseURL = `	http://localhost:8080/reading.json`
+	// instance.defaults.baseURL = `	http://localhost:8080/reading.json`
+	instance.defaults.baseURL = `	http://localhost:8080/Writing.json`
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境默认地址
 	instance.defaults.baseURL = 'https://api.forbiger.com'

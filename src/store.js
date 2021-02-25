@@ -5,11 +5,15 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    task: []
+    task: [],
+    writeContent:{}
   },
   mutations: {
     setTask(state, task) {
       state.task = task
+    },
+    setWriteContent(state,txt){
+      state.writeContent = txt
     }
   },
   actions: {}
