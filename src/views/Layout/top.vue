@@ -25,10 +25,12 @@ export default {
 				currentSection = 'read'
 				this.$utils.setSession('currentSection', currentSection)
 				this.$emit('updatePart')
+				this.$router.replace('/main')
 			} else if (currentSection === 'read') {
 				currentSection = 'write'
 				this.$utils.setSession('currentSection', currentSection)
 				this.$emit('updatePart')
+				this.$router.replace('/main')
 			} else {
 				this.$router.replace('/')
 			}
