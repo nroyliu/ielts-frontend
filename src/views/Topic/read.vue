@@ -269,6 +269,7 @@ export default {
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
 		this.content = this.topic.content
+		console.log(this.content)
 		const dragables = document.querySelectorAll('.dragable')
 		dragables.forEach((el) => {
 			// 监听draggable的相关事件

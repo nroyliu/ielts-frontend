@@ -1,6 +1,6 @@
 <template>
 	<div class="wrapper">
-		<top></top>
+		<top @updatePart="getExam()"></top>
 		<router-view></router-view>
 		<div class="warn-window" v-show="!isShow">
 			<div class="close">
@@ -10,20 +10,21 @@
 					alt
 				/>
 			</div>
-			<div
-				class="content"
-			>Please click the “{{txt}}” button to start the familiarisation test, in your real IELTS test there will be an invigilator in the room to advise when to do this.</div>
+			<div class="content">
+				Please click the “{{ txt }}” button to start the familiarisation test,
+				in your real IELTS test there will be an invigilator in the room to
+				advise when to do this.
+			</div>
 		</div>
 	</div>
 </template>
 
-
 <script>
 import top from './top'
-import { getExam } from '@/server/api'
+import { getListen, getRead, getWrite } from '@/server/api'
 export default {
 	components: {
-		top,
+		top
 	},
 	computed: {},
 	watch: {
@@ -42,11 +43,12 @@ export default {
 					default:
 						this.isShow = true
 				}
-			},
-		},
+			}
+		}
 	},
 	mounted() {
 		this.isShow = sessionStorage.isShow ? true : false
+		this.id = this.$utils.getSession('currentId')
 		this.getExam()
 	},
 	data() {
@@ -54,6 +56,7 @@ export default {
 			dialogVisible: true,
 			txt: 'My details are correct',
 			isShow: false,
+			id: ''
 		}
 	},
 	methods: {
@@ -62,11 +65,44 @@ export default {
 			sessionStorage['isShow'] = true
 		},
 		getExam() {
-			getExam().then((res) => {
-				sessionStorage.topic = JSON.stringify(res)
+			this.id = this.$utils.getSession('currentId')
+			let currentSection = this.$utils.getSession('currentSection')
+			switch (currentSection) {
+				case 'sound':
+					this.getListen()
+					break
+				case 'read':
+					this.getRead()
+					break
+				case 'write':
+					this.getWrite()
+					break
+			}
+		},
+		getListen() {
+			getListen({
+				id: this.id
+			}).then((res) => {
+				this.$utils.setSession('topic', res)
 			})
 		},
-	},
+		getRead() {
+			getRead({
+				id: this.id
+			}).then((res) => {
+				console.log(res)
+				this.$utils.setSession('topic', res)
+			})
+		},
+		getWrite() {
+			getWrite({
+				id: this.id
+			}).then((res) => {
+				console.log(res)
+				this.$utils.setSession('topic', res)
+			})
+		}
+	}
 }
 </script>
 

@@ -29,5 +29,9 @@ export default new Router({
       path: 'topic',
       component: () => import('@/views/Topic'),
     }]
+  },
+  {
+    path: '/analysis',
+    component: () => import('@/views/Analysis')
   }]
 });

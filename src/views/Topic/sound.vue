@@ -9,14 +9,20 @@
 			<!-- type == 32 听力填空 -->
 			<div
 				class="box type32"
-				v-show="item.type === 32 && !~item.content.indexOf('table')"
+				v-if="item.type === 32 && !~item.content.indexOf('table')"
+				style="display: flex"
 			>
 				<pre><div class="content markdown-body" v-html="getHtml(item.content,item)"></div></pre>
+				<div v-if="item.type === 32 && item.mode === 324">
+					<div v-for="(item1, index1) in item.questions" :key="index1">
+						<div v-html="getHtmlItem(item1.content, item1.id)"></div>
+					</div>
+				</div>
 			</div>
 			<!-- type == 32 并且 富文本有表单 -->
 			<div
 				class="box type32"
-				v-show="item.type === 32 && ~item.content.indexOf('table')"
+				v-if="item.type === 32 && ~item.content.indexOf('table')"
 			>
 				<pre class="table">
 					<div class="markdown-body" v-html="getHtml(item.content,item)"></div>
@@ -130,14 +136,33 @@ export default {
 			let txt = marked(markdown)
 			if (item) {
 				item.questions.forEach((item1, index) => {
-					txt = txt.replace(
-						'[i[=NO=]]',
-						`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
-							item1.id
-						}" placeholder="${this.getIndex(item1.id)}" />`
-					)
-					if (!~this.fillIdList.indexOf(item1.id)) {
-						this.fillIdList.push(item1.id)
+					if (~txt.indexOf('[ii[=NO=] and [=NO=]]')) {
+						txt = txt.replace(
+							'[ii[=NO=] and [=NO=]]',
+							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+								item1.id
+							}" placeholder="${this.getIndex(
+								item1.id
+							)}" /> and <input type="text" class="ipt-listen" id="${
+								item1.id
+							}"  name="${item1.id}" placeholder="${this.getIndex(
+								item1.id
+							)}" />`
+						)
+						if (!~this.fillIdList.indexOf(item1.id)) {
+							this.fillIdList.push(item1.id)
+						}
+					} else {
+						txt = txt.replace(
+							'[i[=NO=]]',
+							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+								item1.id
+							}" placeholder="${this.getIndex(item1.id)}" />`
+						)
+
+						if (!~this.fillIdList.indexOf(item1.id)) {
+							this.fillIdList.push(item1.id)
+						}
 					}
 				})
 			}
@@ -150,6 +175,16 @@ export default {
 		// 拼接对象
 		mergeData(obj) {
 			Object.assign(this.answer, obj)
+		},
+		getHtmlItem(markdown, id) {
+			let txt = marked(markdown)
+			txt = txt.replace(
+				'[i[=NO=]]',
+				`<input type="text" class="ipt-listen" id="${id}"  name="${id}" placeholder="${this.getIndex(
+					id
+				)}" />`
+			)
+			return txt
 		}
 	}
 }

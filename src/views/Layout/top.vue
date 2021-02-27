@@ -6,7 +6,7 @@
 		</div>
 		<div class="time"></div>
 		<div class="action">
-			<el-button>Finish section</el-button>
+			<el-button @click="finnishCur">Finish section</el-button>
 			<el-button>Help</el-button>
 			<el-button>Hide</el-button>
 		</div>
@@ -18,6 +18,22 @@ export default {
 	data() {
 		return {}
 	},
+	methods: {
+		finnishCur() {
+			let currentSection = this.$utils.getSession('currentSection')
+			if (currentSection === 'sound') {
+				currentSection = 'read'
+				this.$utils.setSession('currentSection', currentSection)
+				this.$emit('updatePart')
+			} else if (currentSection === 'read') {
+				currentSection = 'write'
+				this.$utils.setSession('currentSection', currentSection)
+				this.$emit('updatePart')
+			} else {
+				this.$router.replace('/')
+			}
+		}
+	}
 }
 </script>
 

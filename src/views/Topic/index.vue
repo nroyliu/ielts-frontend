@@ -74,7 +74,6 @@ export default {
 		}
 	},
 	mounted() {
-		this.$utils.setSession('currentSection', 'write')
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = this.$utils.getSession('currentSection')
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
