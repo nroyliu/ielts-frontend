@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === 'development') {
 	instance.defaults.baseURL  = 'http://api.xuekaodashi.com/api'
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境默认地址
-	instance.defaults.baseURL = 'https://api.forbiger.com'
+	instance.defaults.baseURL  = 'http://api.xuekaodashi.com/api'
 }
 
 instance.interceptors.request.use(
@@ -110,6 +110,10 @@ instance.interceptors.request.use(
 		return Promise.resolve(config)
 	},
 	function (error) {
+		this.$message({
+			message: error,
+			type: 'warning'
+		  });
 		// 对请求错误做处理...
 		return Promise.reject(error)
 	}

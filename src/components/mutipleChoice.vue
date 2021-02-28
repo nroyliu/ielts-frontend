@@ -35,7 +35,7 @@ export default {
 		change(e) {
 			if (this.checkList.length > 2) {
 				this.isDisable = true
-				const obj = { [this.item1.id]: this.checkList }
+				const obj = { [this.item1.id]: this.checkList.sort().join('') }
 				this.$emit('changeData', obj)
 			} else {
 				this.isDisable = false

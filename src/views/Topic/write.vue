@@ -27,6 +27,7 @@
 <script>
 import marked from 'marked'
 import { mapState, mapMutations } from 'vuex'
+import { answerTopic } from '@/server/api'
 export default {
 	components: {},
 	props: {
@@ -53,6 +54,19 @@ export default {
 			let writeContent = this.writeContent
 			Object.assign(writeContent, obj)
 			this.setWriteContent(writeContent)
+			let arr = []
+			let answerData = {}
+			answerData.section = 'listening'
+			answerData.is_finished = 1
+			answerData.record_id = this.$utils.getSession('curInfo').id
+			let obj1 = {}
+			for (let key in obj) {
+				obj1.question_id = key
+				obj1.answer = obj[key]
+				arr.push(obj1)
+			}
+			answerData.answer = arr
+			this.answerTopic(answerData)
 		},
 		getValue(e) {
 			this.value = e.target.value
@@ -60,6 +74,9 @@ export default {
 			let obj = {}
 			obj[id] = this.value
 			this.mergeData(obj)
+		},
+		answerTopic(obj) {
+			answerTopic(obj).then((res) => {})
 		}
 	},
 	mounted() {

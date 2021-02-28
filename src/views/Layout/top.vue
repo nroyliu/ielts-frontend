@@ -4,7 +4,9 @@
 			<img src="../../assets/icon-user.svg" alt />
 			<span>XXXX XXXXX - 123456</span>
 		</div>
-		<div class="time"></div>
+		<div class="time">
+			<!-- <audio src=""></audio> -->
+		</div>
 		<div class="action">
 			<el-button @click="finnishCur">Finish section</el-button>
 			<el-button>Help</el-button>
@@ -32,10 +34,11 @@ export default {
 				this.$emit('updatePart')
 				this.$router.replace('/main')
 			} else {
-				this.$router.replace('/')
+				this.$router.push('/analysis')
 			}
 		}
-	}
+	},
+	mounted() {}
 }
 </script>
 

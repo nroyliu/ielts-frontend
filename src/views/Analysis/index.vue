@@ -57,15 +57,33 @@
 				</div>
 			</div>
 			<div class="tabTitleBox">
-				<div class="tab-title testRecord-title tab-title-active">听力</div>
-				<div class="tab-title correctionRecord-title ">
+				<div
+					class="tab-title testRecord-title "
+					:class="{ 'tab-title-active': currentIndex === 0 }"
+					@click="tabSwitch(0)"
+				>
+					听力
+				</div>
+				<div
+					class="tab-title correctionRecord-title "
+					:class="{ 'tab-title-active': currentIndex === 1 }"
+					@click="tabSwitch(1)"
+				>
 					阅读
 				</div>
-				<div class="tab-title correctionRecord-title">写作</div>
+				<div
+					class="tab-title correctionRecord-title"
+					:class="{ 'tab-title-active': currentIndex === 2 }"
+					@click="tabSwitch(2)"
+				>
+					写作
+				</div>
 				<!---->
 			</div>
 			<div class="m-part">
 				<listen v-if="currentIndex === 0"></listen>
+				<reading v-if="currentIndex === 1"></reading>
+				<writing v-if="currentIndex === 2"></writing>
 			</div>
 		</div>
 	</div>
@@ -73,14 +91,23 @@
 <script>
 import header from '@/components/Header'
 import listen from './listen'
+import reading from './reading'
+import writing from './writing'
 export default {
 	components: {
 		'com-header': header,
-		listen
+		listen,
+		reading,
+		writing
 	},
 	data() {
 		return {
 			currentIndex: 0
+		}
+	},
+	methods: {
+		tabSwitch(index) {
+			this.currentIndex = index
 		}
 	}
 }

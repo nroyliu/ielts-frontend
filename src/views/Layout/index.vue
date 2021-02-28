@@ -90,7 +90,7 @@ export default {
 			getRead({
 				id: this.id
 			}).then((res) => {
-				console.log(res)
+				// console.log(res)
 				this.$utils.setSession('topic', res)
 			})
 		},
@@ -98,7 +98,7 @@ export default {
 			getWrite({
 				id: this.id
 			}).then((res) => {
-				console.log(res)
+				// console.log(res)
 				this.$utils.setSession('topic', res)
 			})
 		}

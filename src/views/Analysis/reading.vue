@@ -19,39 +19,56 @@
 		<div v-for="(item, index) in data" :key="index">
 			<div class="main" v-if="currentPart === index">
 				<div class="m-left">
-					<div class="audio-box">
+					<!-- <div class="audio-box">
 						<div></div>
 						<div class="propgress" style="width:300px">
 							<audio :src="item.audio_url" :id="item.id" controls></audio>
 						</div>
 						<div class="timeBox"></div>
-					</div>
+					</div> -->
 					<div data-v-76ecd7b3="" class="audioTitle">
-						<div data-v-76ecd7b3="" class="title">听力原文</div>
+						<div data-v-76ecd7b3="" class="title">阅读原文</div>
 						<div data-v-76ecd7b3="" class="handle">
-							<el-switch
+							<!-- <el-switch
 								v-model="showOriginal"
 								active-color="#29d087"
-							></el-switch>
+							></el-switch> -->
 						</div>
 					</div>
-					<div v-for="(item1, index1) in item.audio_lrc" :key="index1">
-						<div class="txt">
-							<span>{{ item1.dialog }}</span>
-						</div>
-						<div class="txt" v-show="showOriginal">
-							<span>{{ item1.paraphrase }}</span>
-						</div>
-					</div>
+					<div class="markdown-body txt" v-html="getHtml(item.content)"></div>
 				</div>
 				<div class="m-right">
 					<h5>Question{{ getSection(currentItem.questions) }}</h5>
+					<div v-if="currentItem.content">
+						<div
+							style="white-space:pre-wrap"
+							class="markdown-body"
+							v-html="disposeMarkdown(getHtml(currentItem.content))"
+						></div>
+					</div>
+					<div v-if="currentItem.questions[0].content">
+						<div
+							style="white-space:pre-wrap"
+							class="markdown-body"
+							v-for="item1 in currentItem.questions"
+							:key="item1.id"
+							v-html="dispose2(getHtml(item1.content), item1)"
+						></div>
+
+						<div>
+							<div v-for="(item, index) in currentItem.options" :key="index">
+								<span class="txt">{{ item.option }}</span>
+								<span class="txt">
+									{{ item.text }}
+								</span>
+							</div>
+						</div>
+					</div>
+
 					<div
-						style="white-space:pre-wrap"
-						class="markdown-body"
-						v-html="disposeMarkdown(getHtml(currentItem.content))"
-					></div>
-					<div style="margin-top:10px">
+						style="margin-top:10px"
+						v-if="!~currentItem.questions[0].content.indexOf(']]')"
+					>
 						<div
 							style="font-size: 14px;color:#333;margin-bottom:10px"
 							v-for="(item, index) in currentItem.questions"
@@ -123,7 +140,7 @@
 </template>
 <script>
 import marked from 'marked'
-import { getListen, listenAnswer } from '@/server/api'
+import { getRead, readAnswer } from '@/server/api'
 const ele = null
 export default {
 	data() {
@@ -141,14 +158,19 @@ export default {
 			ele: '',
 			showOriginal: false,
 			currentItem: {},
+			id: '',
 			userAnswer: ''
 		}
 	},
 	methods: {
 		getListenAnalize() {
-			let id = this.$utils.getSession('currentId')
-			getListen({
-				id
+			if (this.$route.query.id) {
+				this.id = this.$route.query.id
+			} else {
+				this.id = this.$utils.getSession('currentId')
+			}
+			getRead({
+				id: this.id
 			}).then((res) => {
 				this.data = res
 				this.data.forEach((item, index) => {
@@ -165,7 +187,6 @@ export default {
 						})
 					})
 				})
-				console.log(this.currentItem)
 			})
 		},
 		// 获取区间 Questions 1-10
@@ -206,28 +227,55 @@ export default {
 								1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
 						)
 						return
-					} else {
-						html = html.replace(
-							'[i[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-						)
-						html = html.replace(
-							'[d[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-						)
 					}
 				})
+				html = html.replace(
+					'[i[=NO=]]',
+					`<span>${this.pagegationId.indexOf(item.id) +
+						1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+				)
+				html = html.replace(
+					'[d[=NO=]]',
+					`<span>${this.pagegationId.indexOf(item.id) +
+						1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+				)
 			})
+			return html
+		},
+		dispose2(html, item) {
+			this.userAnswer.answer.forEach((item1) => {
+				if (item.id === item1.question_id && item.is_correct) {
+					html = html.replace(
+						'[i[=NO=]]',
+						`<span>${this.pagegationId.indexOf(item.id) +
+							1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+					)
+					html = html.replace(
+						'[d[=NO=]]',
+						`<span>${this.pagegationId.indexOf(item.id) +
+							1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+					)
+					return html
+				}
+			})
+			html = html.replace(
+				'[i[=NO=]]',
+				`<span>${this.pagegationId.indexOf(item.id) +
+					1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+			)
+			html = html.replace(
+				'[d[=NO=]]',
+				`<span>${this.pagegationId.indexOf(item.id) +
+					1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+			)
 			return html
 		},
 		// 获取当前题号
 		getIndex(id) {
 			return this.pagegationId.indexOf(id) + 1
 		},
-		listenAnswer() {
-			listenAnswer({
+		readAnswer() {
+			readAnswer({
 				id: this.$utils.getSession('curInfo').id
 			}).then((res) => {
 				this.userAnswer = res
@@ -259,7 +307,7 @@ export default {
 	},
 	created() {
 		this.getListenAnalize()
-		this.listenAnswer()
+		this.readAnswer()
 	},
 	mounted() {
 		this.pagegation = this.$utils.getSession('pagegation')

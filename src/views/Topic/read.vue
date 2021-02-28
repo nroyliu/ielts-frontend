@@ -39,7 +39,12 @@
 					<!-- 阅读单选 type 34 且不为表格-->
 					<div
 						class="m-type11"
-						v-if="item.type === 34 && item.mode != 343 && item.mode !== 342"
+						v-if="
+							item.type === 34 &&
+								item.mode != 343 &&
+								item.mode !== 342 &&
+								item.mode !== 345
+						"
 					>
 						<div
 							class="single-page-s-s"
@@ -90,6 +95,16 @@
 							</div>
 						</div>
 					</div>
+					<!-- 阅读选单项 type 34 mode == 345-->
+					<div class="type34" v-if="item.type === 34 && item.mode == 345">
+						<div v-html="getCurrentHtml(item)"></div>
+						<div>
+							<div v-for="item1 in item.options" :key="item1.option">
+								<span>{{ item1.option }}.</span>
+								<span>{{ item1.text }}</span>
+							</div>
+						</div>
+					</div>
 					<!-- 多选 -->
 					<div class="multipleChoice" v-if="item.type === 12">
 						<div v-for="(item1, index1) in item.questions" :key="index1">
@@ -105,6 +120,31 @@
 							</div>
 						</div>
 					</div>
+					<!-- 表格填写 -->
+					<div v-if="item.type === 32 && item.mode === 322">
+						<div class="markdown-body" v-html="getCurrentHtml(item)"></div>
+					</div>
+					<!-- 阅读填空type 32 mode == 323-->
+					<div
+						class="type34"
+						v-if="
+							(item.type === 32 && item.mode == 323) ||
+								(item.type === 32 && item.mode == 321)
+						"
+					>
+						<span class="markdown-body" v-html="getCurrentHtml(item)"></span>
+					</div>
+					<!-- 阅读填空单选 type 32 mode == 324-->
+					<div class="type34" v-if="item.type === 32 && item.mode == 324">
+						<!-- <div v-for="item1 in item.questions" :key="item1.id"> -->
+						<div v-html="getHtml(item.content, true)"></div>
+						<div>
+							<div v-for="item1 in item.questions" :key="item1.option">
+								<div v-html="dispose(item1)"></div>
+							</div>
+						</div>
+						<!-- </div> -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -117,6 +157,7 @@ import singleOption from '../../components/singleOption'
 import listenImageTable from '../../components/listenImageTable'
 import dragComponent from '../../components/dragComponent'
 import mutipleChoice from '../../components/mutipleChoice'
+import { answerTopic } from '@/server/api'
 const eleMap = []
 
 const dragStart = (e) => {
@@ -154,7 +195,8 @@ export default {
 			answer: {},
 			idDragList: [],
 			currentIndex: 0,
-			idObj: {}
+			idObj: {},
+			fillIdList: []
 		}
 	},
 	watch: {
@@ -204,11 +246,76 @@ export default {
 							)
 							if (!~this.idDragList.indexOf(item.id))
 								this.idDragList.push(item.id)
+							if (!~this.fillIdList.indexOf(item.id))
+								this.fillIdList.push(item.id)
+						})
+					}
+					if (
+						(item1.type === 34 && item1.mode == 345) ||
+						(item1.type === 34 && item1.mode == 344)
+					) {
+						item1.questions.forEach((item) => {
+							txt = txt.replace(
+								'[d[=NO=]]',
+								`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+									item.id
+								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+									item.id
+								}" name="${item.id}"></input></div>`
+							)
+							if (!~this.fillIdList.indexOf(item.id))
+								this.fillIdList.push(item.id)
+						})
+					}
+
+					if (item1.type === 32 && item1.mode == 323) {
+						item1.questions.forEach((item) => {
+							txt = txt.replace(
+								'[i[=NO=]]',
+								`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+									item.id
+								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+									item.id
+								}" name="${item.id}"></input></span>`
+							)
+							if (!~this.fillIdList.indexOf(item.id))
+								this.fillIdList.push(item.id)
 						})
 					}
 				})
 			}
 
+			return txt
+		},
+		getCurrentHtml(item) {
+			let txt = marked(item.content)
+			item.questions.forEach((item) => {
+				txt = txt.replace(
+					'[i[=NO=]]',
+					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+						item.id
+					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+						item.id
+					}" name="${item.id}"></input></div>`
+				)
+				txt = txt.replace(
+					'[ii[=NO=] whales and [=NO=]]',
+					`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
+				)
+				txt = txt.replace(
+					'[ii[=NO=] and [=NO=]]',
+					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
+				)
+				txt = txt.replace(
+					'[d[=NO=]]',
+					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+						item.id
+					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+						item.id
+					}" name="${item.id}"></input></div>`
+				)
+				if (!~this.fillIdList.indexOf(item.id)) this.fillIdList.push(item.id)
+			})
 			return txt
 		},
 		// 获取当前题号
@@ -217,7 +324,19 @@ export default {
 		},
 		// 拼接对象
 		mergeData(obj) {
-			Object.assign(this.answer, obj)
+			let arr = []
+			let answerData = {}
+			answerData.section = 'listening'
+			answerData.is_finished = 1
+			answerData.record_id = this.$utils.getSession('curInfo').id
+			let obj1 = {}
+			for (let key in obj) {
+				obj1.question_id = key
+				obj1.answer = obj[key]
+				arr.push(obj1)
+			}
+			answerData.answer = arr
+			this.answerTopic(answerData)
 		},
 		dragDrop(e) {
 			let _this = this
@@ -252,11 +371,27 @@ export default {
 				)
 			}
 		},
+		answerTopic(obj) {
+			answerTopic(obj).then((res) => {})
+		},
 		dragStart(index) {
 			this.currentIndex = index
 		},
 		checkBox(e) {
-			console.log(e)
+			// console.log(e)
+		},
+		dispose(item) {
+			let txt = marked(item.content)
+			txt = txt.replace(
+				'[i[=NO=]]',
+				`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+					item.id
+				) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+					item.id
+				}" name="${item.id}"></input></div>`
+			)
+			if (!~this.fillIdList.indexOf(item.id)) this.fillIdList.push(item.id)
+			return txt
 		}
 	},
 	mounted() {
@@ -269,7 +404,7 @@ export default {
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
 		this.content = this.topic.content
-		console.log(this.content)
+		// console.log(this.content)
 		const dragables = document.querySelectorAll('.dragable')
 		dragables.forEach((el) => {
 			// 监听draggable的相关事件
@@ -285,6 +420,19 @@ export default {
 				droppable.addEventListener('dragleave', dragLeave)
 				droppable.addEventListener('dragenter', dragEnter)
 				droppable.addEventListener('drop', (e) => this.dragDrop(e))
+			})
+		})
+		// 原生js操作
+		this.$nextTick(() => {
+			this.fillIdList.forEach((item, index) => {
+				if (document.getElementsByName(item)) {
+					let eleList = document.getElementsByName(item)
+					eleList.forEach((item1) => {
+						item1.addEventListener('change', (e) => {
+							this.mergeData({ [item]: e.target.value })
+						})
+					})
+				}
 			})
 		})
 	}

@@ -122,14 +122,21 @@
 									</template>
 									<div
 										class="item-paper"
-										v-for="(item2, index2) in item1.paper"
+										v-for="(item2, index2) in item1.papers"
 										:key="index2"
 									>
 										<div class="paper-name">{{ item2.name }}</div>
-										<div class="practice_time">练习人次 30707</div>
+										<div class="practice_time">
+											练习人次 {{ item2.exercise_count }}
+										</div>
 										<!---->
 										<div class="practice_progress">
-											<span>已完成 33%</span>
+											<span v-if="item2.record != null">
+												已完成 {{ item2.record | disposeData }}
+											</span>
+											<span v-else>
+												已完成 0%
+											</span>
 										</div>
 										<div class="practice_button" @click="beginExam(item2.id)">
 											开始考试
@@ -239,7 +246,7 @@
 
 <script>
 import header from '@/components/Header'
-import { getSub, getOriginalOptions, getPaper } from '@/server/api'
+import { getSub, getOriginalOptions, getPaper, startExam } from '@/server/api'
 export default {
 	components: {
 		'com-header': header
@@ -255,11 +262,19 @@ export default {
 	},
 	methods: {
 		beginExam(id) {
-			this.$router.push({
-				path: '/main'
+			this.startExam(id)
+		},
+		startExam(id) {
+			startExam({
+				paper_id: id
+			}).then((res) => {
+				this.$router.push({
+					path: '/main'
+				})
+				this.$utils.setSession('currentSection', 'sound')
+				this.$utils.setSession('currentId', id)
+				this.$utils.setSession('curInfo', res)
 			})
-			this.$utils.setSession('currentSection', 'sound')
-			this.$utils.setSession('currentId', id)
 		},
 		getSub() {
 			getSub().then((res) => {
@@ -302,6 +317,20 @@ export default {
 		checkType(id) {
 			this.currentType = id
 			this.getPaper()
+		}
+	},
+	filters: {
+		disposeData(data) {
+			let value = ''
+			if (data.is_finished) {
+				return '100%'
+			}
+			data.details.forEach((item, index) => {
+				if (item.is_finished) {
+					value = `${(index + 1) * 33}%`
+				}
+			})
+			return value ? value : '0%'
 		}
 	},
 	mounted() {

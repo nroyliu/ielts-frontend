@@ -1,5 +1,19 @@
 <template>
 	<div class="warapper">
+		<div class="audio" v-if="currentSection === 'sound' && topic.length > 0">
+			<audio id="audio" :src="audioUrl" @timeupdate="audioPlay"></audio>
+			<div class="btn">
+				<i class="el-icon-video-play" @click="play()" v-show="!isPlay"></i>
+				<i class="el-icon-video-pause" v-show="isPlay"></i>
+			</div>
+			<div class="progress">
+				<el-progress
+					:percentage="percentage"
+					color="#e6a23c"
+					:show-text="false"
+				></el-progress>
+			</div>
+		</div>
 		<div class="c_partBar col mb-2 title">
 			<h3>Part {{ currentPart }}</h3>
 		</div>
@@ -53,7 +67,11 @@ export default {
 		return {
 			topic: [],
 			currentPart: 1,
-			currentSection: 'sound'
+			currentSection: 'sound',
+			audio: null,
+			isPlay: false,
+			audioUrl: '',
+			percentage: 0
 		}
 	},
 	watch: {
@@ -76,11 +94,22 @@ export default {
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = this.$utils.getSession('currentSection')
+		this.audioUrl = this.topic[0].audio_url
+		setTimeout(() => {
+			this.audio = document.getElementById('audio')
+			this.audioUrl = this.topic[this.currentPart - 1].audio_url
+		})
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
 	methods: {
 		partChange(e) {
 			this.currentPart = +e
+			this.percentage = 0
+			if (this.audio != null) {
+				this.pause()
+				this.audioUrl = this.topic[this.currentPart - 1].audio_url
+				this.isPlay = false
+			}
 			switch (this.currentSection) {
 				case 'sound':
 					this.$refs.sound.groups = this.topic[this.currentPart - 1]
@@ -89,12 +118,52 @@ export default {
 					this.$refs.read.groups = this.topic[this.currentPart - 1]
 					break
 			}
+		},
+		audioPlay(e) {
+			let duration = this.audio.duration
+			let currentTime = this.audio.currentTime
+			let rate = (currentTime / duration).toFixed(2)
+			this.percentage = rate * 100
+		},
+		play() {
+			if (this.isPlay) return
+			this.audio.play()
+			this.isPlay = true
+		},
+		pause() {
+			this.audio.pause()
+			// this.isPlay = false
 		}
 	}
 }
 </script>
 
 <style lang="less" scoped>
+.audio {
+	position: fixed;
+	top: 20px;
+	left: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	transform: translateX(-50%);
+	width: 300px;
+	z-index: 1000;
+	.btn {
+		width: 34px;
+		height: 34px;
+		i {
+			text-align: center;
+			line-height: 34px;
+			font-size: 30px;
+			color: #fff;
+			cursor: pointer;
+		}
+	}
+	.progress {
+		width: 250px;
+	}
+}
 .warapper {
 	padding: 0 32px;
 	margin-top: 10px;

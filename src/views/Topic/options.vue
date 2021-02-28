@@ -1,10 +1,10 @@
 <template>
 	<div class="foot">
 		<div class="current-option-status">
-			<div class="rect">
+			<!-- <div class="rect">
 				<i class="el-icon-check"></i>
 			</div>
-			<div class="txt">Review</div>
+			<div class="txt">Review</div> -->
 		</div>
 		<div class="m-option-list">
 			<ul v-for="(item, index) in topic" :key="index">

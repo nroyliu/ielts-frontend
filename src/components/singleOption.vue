@@ -49,20 +49,21 @@ export default {
 	data() {
 		return {
 			radio: '',
-			obj: {}
+			obj: {},
+			id1: ''
 		}
 	},
 	methods: {
 		selectChange(e) {
-			this.obj[this.id] = e
+			this.obj[this.id1] = e
 			this.$emit('changeData', this.obj)
 		}
 	},
 	created() {
 		if (this.id) {
-			this.obj[this.id] = ''
+			this.id1 = this.id
 		} else {
-			this.obj[this.item.id] = ''
+			this.id1 = this.item.id
 		}
 	}
 }

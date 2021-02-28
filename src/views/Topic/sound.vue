@@ -74,6 +74,7 @@ import marked from 'marked'
 import singleOption from '../../components/singleOption'
 import listenImageTable from '../../components/listenImageTable'
 import dragComponent from '../../components/dragComponent'
+import { answerTopic } from '@/server/api'
 export default {
 	components: {
 		singleOption,
@@ -115,7 +116,7 @@ export default {
 				if (document.getElementsByName(item)) {
 					let eleList = document.getElementsByName(item)
 					eleList.forEach((item1) => {
-						item1.addEventListener('keyup', (e) => {
+						item1.addEventListener('change', (e) => {
 							this.mergeData({ [item]: e.target.value })
 						})
 					})
@@ -174,7 +175,23 @@ export default {
 		},
 		// 拼接对象
 		mergeData(obj) {
-			Object.assign(this.answer, obj)
+			let arr = []
+			let answerData = {}
+			answerData.section = 'listening'
+			answerData.is_finished = 1
+			answerData.record_id = this.$utils.getSession('curInfo').id
+			let obj1 = {}
+			for (let key in obj) {
+				obj1.question_id = key
+				obj1.answer = obj[key]
+				arr.push(obj1)
+			}
+			answerData.answer = arr
+			console.log(answerData)
+			this.answerTopic(answerData)
+		},
+		answerTopic(obj) {
+			answerTopic(obj).then((res) => {})
 		},
 		getHtmlItem(markdown, id) {
 			let txt = marked(markdown)
