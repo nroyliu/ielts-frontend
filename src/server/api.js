@@ -19,16 +19,25 @@ export const getRead = (data) => axios.get(`/exam/papers/${data.id}/reading`, da
 export const getWrite = (data) => axios.get(`/exam/papers/${data.id}/writing`, data)
 
 // 开始考试
-export const startExam = data => axios.post(`/exam/paper/start`,data)
+export const startExam = data => axios.post(`/exam/paper/start`, data)
 
 // 答题
-export const answerTopic = data => axios.put(`/exam/paper/records/${data.record_id}`,data)
+export const answerTopic = data => axios.put(`/exam/paper/records/${data.record_id}`, data)
 
 // 获取听力答案
-export const listenAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/listening`,data)
+export const listenAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/listening`, data)
 
 // 获取阅读答案
-export const readAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/reading`,data)
+export const readAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/reading`, data)
 
 // 获取写作答案
-export const writeAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/writing`,data)
+export const writeAnswer = data => axios.get(`/exam/paper/records/selected/${data.id}/writing`, data)
+
+
+// 登录
+export const login = data => axios.post(`/exam/login`, data)
+
+// 注册
+export const register = data => axios.post(`/exam/register`, data)
+// 获取用户信息
+export const userinfo = data => axios.get(`/exam/userinfo`, data)

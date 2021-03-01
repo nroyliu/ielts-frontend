@@ -11,8 +11,7 @@
 // request.js
 import axios from 'axios' // 引入axios
 import Qs from 'qs' // 引入qs模块，用来序列化post类型的数据
-// import { autoMatch, checkStatus } from './utils' // 处理函数
-// import { Toast } from 'vant' // 提示框
+import router from '../router'
 
 // 创建axios实例
 const instance = axios.create({
@@ -45,10 +44,10 @@ if (process.env.NODE_ENV === 'development') {
 	// instance.defaults.baseURL = `http://localhost:8080/reading.json`
 	// instance.defaults.baseURL = `http://localhost:8080/Writing.json`
 	// instance.defaults.baseURL = `http://139.155.73.158/api`
-	instance.defaults.baseURL  = 'http://api.xuekaodashi.com/api'
+	instance.defaults.baseURL = 'http://api.xuekaodashi.com/api'
 } else if (process.env.NODE_ENV === 'production') {
 	// 生产环境默认地址
-	instance.defaults.baseURL  = 'http://api.xuekaodashi.com/api'
+	instance.defaults.baseURL = 'http://api.xuekaodashi.com/api'
 }
 
 instance.interceptors.request.use(
@@ -107,13 +106,20 @@ instance.interceptors.request.use(
 				config.headers
 			)
 		}
+		let token = localStorage.token || ''
+		config.headers = Object.assign({
+				'X-Requested-With': 'XMLHttpRequest',
+				'Authorization': token ? `Bearer ${token}` : ''
+			},
+			config.headers
+		)
 		return Promise.resolve(config)
 	},
 	function (error) {
 		this.$message({
 			message: error,
 			type: 'warning'
-		  });
+		});
 		// 对请求错误做处理...
 		return Promise.reject(error)
 	}
@@ -121,10 +127,15 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
 	(res) => {
-		return Promise.resolve(res.data.data)
+		if (res.status === 301) {
+			router.replace('/login')
+		} else {
+			return Promise.resolve(res.data.data)
+		}
 	},
 	(err) => {
 		return Promise.reject(err.response)
 	}
 )
+
 export default instance

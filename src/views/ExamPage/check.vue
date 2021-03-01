@@ -32,7 +32,10 @@ export default {
 	},
 	methods: {
 		goConfirm() {
-			this.$router.push('/main/testSound')
+			this.$router.push({
+				path: '/main/testSound',
+				query: { id: this.$route.query.id },
+			})
 		},
 	},
 }

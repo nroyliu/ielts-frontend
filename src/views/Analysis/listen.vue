@@ -9,9 +9,7 @@
 							class="item"
 							:class="{ 'active-item': checkObj[item1.id] }"
 							@click="checkGroup(item1.id, index, item1)"
-						>
-							Q{{ getSection(item1.questions) }}
-						</div>
+						>Q{{ getSection(item1.questions) }}</div>
 					</div>
 				</div>
 			</div>
@@ -26,13 +24,10 @@
 						</div>
 						<div class="timeBox"></div>
 					</div>
-					<div data-v-76ecd7b3="" class="audioTitle">
-						<div data-v-76ecd7b3="" class="title">听力原文</div>
-						<div data-v-76ecd7b3="" class="handle">
-							<el-switch
-								v-model="showOriginal"
-								active-color="#29d087"
-							></el-switch>
+					<div data-v-76ecd7b3 class="audioTitle">
+						<div data-v-76ecd7b3 class="title">听力原文</div>
+						<div data-v-76ecd7b3 class="handle">
+							<el-switch v-model="showOriginal" active-color="#29d087"></el-switch>
 						</div>
 					</div>
 					<div v-for="(item1, index1) in item.audio_lrc" :key="index1">
@@ -46,29 +41,41 @@
 				</div>
 				<div class="m-right">
 					<h5>Question{{ getSection(currentItem.questions) }}</h5>
-					<div
-						style="white-space:pre-wrap"
-						class="markdown-body"
-						v-html="disposeMarkdown(getHtml(currentItem.content))"
-					></div>
-					<div style="margin-top:10px">
+					<div v-if="currentItem.content">
+						<div
+							style="white-space:pre-wrap"
+							class="markdown-body"
+							v-html="disposeMarkdown(getHtml(currentItem.content))"
+						></div>
+					</div>
+					<div v-if="currentItem.questions[0].content">
+						<div
+							style="white-space:pre-wrap"
+							class="markdown-body"
+							v-for="item1 in currentItem.questions"
+							:key="item1.id"
+							v-html="dispose2(getHtml(item1.content), item1)"
+						></div>
+
+						<div>
+							<div v-for="(item, index) in currentItem.options" :key="index">
+								<span class="txt">{{ item.option }}</span>
+								<span class="txt">{{ item.text }}</span>
+							</div>
+						</div>
+					</div>
+					<div style="margin-top:10px" v-if="!~currentItem.questions[0].content.indexOf(']]')">
 						<div
 							style="font-size: 14px;color:#333;margin-bottom:10px"
 							v-for="(item, index) in currentItem.questions"
 							:key="index"
 						>
 							<div>
-								<span style="margin-right:10px" v-if="item.content">
-									{{ getIndex(item.id) }}
-								</span>
+								<span style="margin-right:10px" v-if="item.content">{{ getIndex(item.id) }}</span>
 								<span>{{ item.content }}</span>
 							</div>
 							<div v-if="item.content">
-								<div
-									style="margin-left:15px"
-									v-for="item1 in item.options"
-									:key="item1.option"
-								>
+								<div style="margin-left:15px" v-for="item1 in item.options" :key="item1.option">
 									<span>{{ item1.option }}</span>
 									<span style="margin-left:15px">{{ item1.text }}</span>
 								</div>
@@ -108,10 +115,7 @@
 						<div class="analysis-title">解析</div>
 						<div class="analysis-con">
 							<div v-for="(item, index) in currentItem.questions" :key="index">
-								<pre
-									style="margin-right: 10px; white-space: pre-line"
-									class=""
-								><b>{{ getIndex(item.id) }}. </b>{{item.analysis}} </pre>
+								<pre style="margin-right: 10px; white-space: pre-line" class><b>{{ getIndex(item.id) }}. </b>{{item.analysis}} </pre>
 								<br />
 							</div>
 						</div>
@@ -136,19 +140,19 @@ export default {
 			isPlay: false,
 			audioInfo: {
 				duration: 0,
-				current: 0
+				current: 0,
 			},
 			ele: '',
 			showOriginal: false,
 			currentItem: {},
-			userAnswer: ''
+			userAnswer: '',
 		}
 	},
 	methods: {
 		getListenAnalize() {
 			let id = this.$utils.getSession('currentId')
 			getListen({
-				id
+				id,
 			}).then((res) => {
 				this.data = res
 				this.data.forEach((item, index) => {
@@ -197,28 +201,31 @@ export default {
 					if (item.id === item1.question_id && item.is_correct) {
 						html = html.replace(
 							'[i[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+							`<span>${
+								this.pagegationId.indexOf(item.id) + 1
+							}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
 						)
 						html = html.replace(
 							'[d[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+							`<span>${
+								this.pagegationId.indexOf(item.id) + 1
+							}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
 						)
 						return
-					} else {
-						html = html.replace(
-							'[i[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-						)
-						html = html.replace(
-							'[d[=NO=]]',
-							`<span>${this.pagegationId.indexOf(item.id) +
-								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-						)
 					}
 				})
+				html = html.replace(
+					'[i[=NO=]]',
+					`<span>${
+						this.pagegationId.indexOf(item.id) + 1
+					}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+				)
+				html = html.replace(
+					'[d[=NO=]]',
+					`<span>${
+						this.pagegationId.indexOf(item.id) + 1
+					}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+				)
 			})
 			return html
 		},
@@ -228,7 +235,7 @@ export default {
 		},
 		listenAnswer() {
 			listenAnswer({
-				id: this.$utils.getSession('curInfo').id
+				id: this.$utils.getSession('curInfo').id,
 			}).then((res) => {
 				this.userAnswer = res
 				console.log(res)
@@ -242,7 +249,39 @@ export default {
 				}
 			})
 			return txt
-		}
+		},
+		dispose2(html, item) {
+			this.userAnswer.answer.forEach((item1) => {
+				if (item.id === item1.question_id && item.is_correct) {
+					html = html.replace(
+						'[i[=NO=]]',
+						`<span>${
+							this.pagegationId.indexOf(item.id) + 1
+						}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+					)
+					html = html.replace(
+						'[d[=NO=]]',
+						`<span>${
+							this.pagegationId.indexOf(item.id) + 1
+						}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+					)
+					return html
+				}
+			})
+			html = html.replace(
+				'[i[=NO=]]',
+				`<span>${
+					this.pagegationId.indexOf(item.id) + 1
+				}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+			)
+			html = html.replace(
+				'[d[=NO=]]',
+				`<span>${
+					this.pagegationId.indexOf(item.id) + 1
+				}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
+			)
+			return html
+		},
 	},
 	filters: {
 		realFormatSecond(second) {
@@ -255,7 +294,7 @@ export default {
 			} else {
 				return '00:00'
 			}
-		}
+		},
 	},
 	created() {
 		this.getListenAnalize()
@@ -270,7 +309,7 @@ export default {
 		link.href =
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
-	}
+	},
 }
 </script>
 

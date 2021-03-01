@@ -36,7 +36,10 @@ export default {
 	},
 	methods: {
 		goConfirm() {
-			this.$router.push('/main/topic')
+			this.$router.push({
+				path: '/main/topic',
+				query: { id: this.$route.query.id },
+			})
 		},
 	},
 }

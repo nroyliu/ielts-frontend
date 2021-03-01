@@ -13,7 +13,7 @@
 				"
 				:showWarn="iptRule.name"
 			></ipt>
-			<div class="m-verticalfy" v-show="theme === 1 || theme === 2 || theme === 3">
+			<!--<div class="m-verticalfy" v-show="theme === 1 || theme === 2 || theme === 3">
 				<ipt
 					:value="userData.psw"
 					placeholder="验证码"
@@ -26,7 +26,7 @@
 					:showWarn="iptRule.vertical"
 				></ipt>
 				<div class="verification-btn">获取验证码</div>
-			</div>
+			</div>-->
 
 			<ipt
 				:value="userData.psw"
@@ -39,17 +39,31 @@
 				type="password"
 				v-show="theme !== 3"
 			></ipt>
+			<div style="margin-top:10px">
+				<ipt
+					:value="userData.repsw"
+					placeholder="密码"
+					@updateTxt="
+					userData.repsw = $event
+					check(2)
+				"
+					:showWarn="iptRule.psw"
+					type="password"
+					v-show="theme == 2"
+				></ipt>
+			</div>
+
 			<div class="login-btn" @click="login" v-show="theme === 0 || theme === 3">登录</div>
 			<div class="login-btn" v-show="theme === 1">修改</div>
-			<div class="login-btn" v-show="theme === 2">注册</div>
+			<div class="login-btn" v-show="theme === 2" @click="register()">注册</div>
 			<div class="change-type-box">
 				<!---->
 				<div class="change-type" v-show="theme === 0">
 					<span class="type-btn" @click="changeTheme(1)">忘记密码</span>
 					<span>|</span>
 					<span class="type-btn" @click="changeTheme(2)">注册</span>
-					<span>|</span>
-					<span class="type-btn" @click="changeTheme(3)">验证码快捷登录</span>
+					<!--<span>|</span>
+					<span class="type-btn" @click="changeTheme(3)">验证码快捷登录</span>-->
 				</div>
 				<!---->
 				<!---->
@@ -81,6 +95,7 @@
 
 <script>
 import ipt from '@/components/ipt'
+import { login, register } from '@/server/api'
 export default {
 	components: {
 		ipt,
@@ -93,11 +108,13 @@ export default {
 				name: '',
 				psw: '',
 				vertical: '',
+				repsw: '',
 			},
 			iptRule: {
 				name: false,
 				psw: false,
 				vertical: false,
+				repsw: false,
 			},
 		}
 	},
@@ -129,10 +146,53 @@ export default {
 						this.iptRule.vertical = false
 					}
 					break
+				case 3:
+					if (!this.userData.repsw) {
+						this.iptRule.repsw = true
+					} else {
+						this.iptRule.repsw = false
+					}
+					break
 			}
 		},
 		login() {
-			this.$router.replace('/')
+			login({
+				phone_number: this.userData.name,
+				password: this.userData.psw,
+			}).then((res) => {
+				localStorage.token = res.token
+				this.$router.replace('/')
+			})
+		},
+		register() {
+			if (!this.userData.name) {
+				this.$message({
+					type: 'warning',
+					message: '请输入用户名',
+				})
+				return
+			}
+			if (!this.userData.psw) {
+				this.$message({
+					type: 'warning',
+					message: '请输入密码',
+				})
+				return
+			}
+			if (this.userData.psw != this.userData.repsw) {
+				this.$message({
+					type: 'warning',
+					message: '两次密码不一致',
+				})
+				return
+			}
+			register({
+				phone_number: this.userData.name,
+				password: this.userData.psw,
+			}).then((res) => {
+				this.theme = 0
+				console.log(res)
+			})
 		},
 	},
 	filters: {

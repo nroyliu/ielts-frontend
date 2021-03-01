@@ -4,13 +4,13 @@
 			<!-- <div class="rect">
 				<i class="el-icon-check"></i>
 			</div>
-			<div class="txt">Review</div> -->
+			<div class="txt">Review</div>-->
 		</div>
 		<div class="m-option-list">
 			<ul v-for="(item, index) in topic" :key="index">
 				<li class="m-part">Part{{ index + 1 }}:</li>
 				<li class v-for="(item, index1) in topic[index].groups" :key="index1">
-					<div
+					<a
 						class="program"
 						:class="{
 							blue:
@@ -23,26 +23,25 @@
 						style="display:inline-block"
 						v-for="(item, index2) in topic[index].groups[index1].questions"
 						:key="index2"
-					>
-						<!-- 题目所对应part-->
-						<a
-							:ref="`${topic[index].groups[index1].questions[index2].id}`"
-							:href="`#${topic[index].groups[index1].questions[index2].id}`"
-							@click="
+						:ref="`${topic[index].groups[index1].questions[index2].id}`"
+						:href="`#${topic[index].groups[index1].questions[index2].id}`"
+						@click="
 								selectItem(
 									pagegation.indexOf(
 										topic[index].groups[index1].questions[index2].id
 									)
 								)
 							"
-						>
+					>
+						<!-- 题目所对应part-->
+						<a>
 							{{
-								pagegation.indexOf(
-									topic[index].groups[index1].questions[index2].id
-								) + 1
+							pagegation.indexOf(
+							topic[index].groups[index1].questions[index2].id
+							) + 1
 							}}
 						</a>
-					</div>
+					</a>
 				</li>
 			</ul>
 		</div>
@@ -68,7 +67,7 @@ export default {
 			topic: [],
 			pagegation: [],
 			currentPage: 1,
-			part: {}
+			part: {},
 		}
 	},
 	mounted() {
@@ -112,8 +111,8 @@ export default {
 					return key
 				}
 			}
-		}
-	}
+		},
+	},
 }
 </script>
 
