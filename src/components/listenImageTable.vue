@@ -23,7 +23,10 @@
 						<td>
 							<!-- <div> -->
 							<span class="title">
-								{{ `${pagegation.indexOf(trItem.id) + 1}. ${trItem.content}` }}
+								{{
+									`${pagegation.indexOf(trItem.id) +
+										1}. ${trItem.content.replace('[d[=NO=]]', '')}`
+								}}
 							</span>
 							<!-- </div> -->
 						</td>
