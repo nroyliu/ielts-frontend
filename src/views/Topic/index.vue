@@ -7,32 +7,56 @@
 				<i class="el-icon-video-pause" v-show="isPlay"></i>
 			</div>
 			<div class="progress">
-				<el-progress :percentage="percentage" color="#e6a23c" :show-text="false"></el-progress>
+				<el-progress
+					:percentage="percentage"
+					color="#e6a23c"
+					:show-text="false"
+				></el-progress>
 			</div>
 		</div>
 		<div class="c_partBar col mb-2 title">
 			<h3>Part {{ currentPart }}</h3>
 		</div>
 		<!-- 听力 -->
-		<div class="single-page" v-if="currentSection === 'sound'" :style="{height:clientHeight+'px'}">
+		<div
+			class="single-page"
+			v-if="currentSection === 'sound'"
+			:style="{ height: clientHeight + 'px' }"
+		>
 			<div v-for="(item, index) in topic" :key="index">
-				<sound ref="sound" :groups="topic[index]" v-show="currentPart === index + 1"></sound>
+				<sound
+					ref="sound"
+					:groups="topic[index]"
+					v-show="currentPart === index + 1"
+				></sound>
 			</div>
 		</div>
 		<!-- 阅读 -->
-		<div class="double-page" v-if="currentSection === 'read'" :style="{height:clientHeight+'px'}">
+		<div
+			class="double-page"
+			v-if="currentSection === 'read'"
+			:style="{ height: clientHeight + 'px' }"
+		>
 			<div v-for="(item1, index1) in topic" :key="index1">
-				<read ref="read" :topic="topic[index1]" v-show="currentPart === index1 + 1"></read>
+				<read
+					ref="read"
+					:topic="topic[index1]"
+					v-show="currentPart === index1 + 1"
+				></read>
 			</div>
 		</div>
 		<!-- 写作 -->
 		<div
 			class="double-page write"
 			v-if="currentSection === 'write'"
-			:style="{height:clientHeight+'px'}"
+			:style="{ height: clientHeight + 'px' }"
 		>
 			<div v-for="(itemwrite, indexwrite) in topic" :key="indexwrite">
-				<write ref="write" :topic="topic[indexwrite]" v-show="currentPart === indexwrite + 1"></write>
+				<write
+					ref="write"
+					:topic="topic[indexwrite]"
+					v-show="currentPart === indexwrite + 1"
+				></write>
 			</div>
 		</div>
 		<foot @partChange="partChange"></foot>
@@ -49,7 +73,7 @@ export default {
 		sound,
 		foot,
 		read,
-		write,
+		write
 	},
 	data() {
 		return {
@@ -60,7 +84,7 @@ export default {
 			isPlay: false,
 			audioUrl: '',
 			percentage: 0,
-			clientHeight: 0,
+			clientHeight: 0
 		}
 	},
 	watch: {
@@ -78,7 +102,7 @@ export default {
 						break
 				}
 			}
-		},
+		}
 	},
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
@@ -138,8 +162,8 @@ export default {
 						: document.documentElement.clientHeight
 			}
 			return clientHeight
-		},
-	},
+		}
+	}
 }
 </script>
 
@@ -168,6 +192,14 @@ export default {
 	.progress {
 		width: 250px;
 	}
+}
+
+.single-page::-webkit-scrollbar {
+	display: none;
+}
+
+.double-page::-webkit-scrollbar {
+	display: none;
 }
 .warapper {
 	padding: 0 32px;

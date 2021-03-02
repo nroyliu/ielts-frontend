@@ -122,7 +122,10 @@
 					</div>
 					<!-- 表格填写 -->
 					<div v-if="item.type === 32 && item.mode === 322">
-						<div class="markdown-body" v-html="getCurrentHtml(item)"></div>
+						<pre
+							class="markdown-body table"
+							v-html="getCurrentHtml(item)"
+						></pre>
 					</div>
 					<!-- 阅读填空type 32 mode == 323-->
 					<div
@@ -237,12 +240,12 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[d[=NO=]]',
-								`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 									item.id
 								) +
-									1}.</h5 ><div class="ondrag" style="margin:0 6px;" wrap="true" draggable="false" id="${
+									1}.</h5 ><span class="ondrag" style="margin:0 6px;" wrap="true" draggable="false" id="${
 									item.id
-								}"></div></div>`
+								}"></span></span>`
 							)
 							if (!~this.idDragList.indexOf(item.id))
 								this.idDragList.push(item.id)
@@ -257,7 +260,7 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[d[=NO=]]',
-								`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 									item.id
 								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
 									item.id
@@ -272,7 +275,7 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[i[=NO=]]',
-								`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<span style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 									item.id
 								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
 									item.id
@@ -292,7 +295,7 @@ export default {
 			item.questions.forEach((item) => {
 				txt = txt.replace(
 					'[i[=NO=]]',
-					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 						item.id
 					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
 						item.id
@@ -300,15 +303,15 @@ export default {
 				)
 				txt = txt.replace(
 					'[ii[=NO=] whales and [=NO=]]',
-					`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
+					`<span style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
 				)
 				txt = txt.replace(
 					'[ii[=NO=] and [=NO=]]',
-					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
+					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
 				)
 				txt = txt.replace(
 					'[d[=NO=]]',
-					`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 						item.id
 					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
 						item.id
@@ -384,7 +387,7 @@ export default {
 			let txt = marked(item.content)
 			txt = txt.replace(
 				'[i[=NO=]]',
-				`<div style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+				`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
 					item.id
 				) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
 					item.id
@@ -440,6 +443,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.double-page::-webkit-scrollbar {
+	display: none;
+}
 .description {
 	margin-bottom: 10px;
 }
@@ -454,7 +460,9 @@ export default {
 	text-align: center;
 	transition: all 0.5s;
 }
-
+.markdown-body .table {
+	table-layout: fixed;
+}
 .left-content {
 	flex: 0.5;
 	padding: 0 30px 0 15px;
@@ -475,6 +483,7 @@ export default {
 	width: 100%;
 	justify-content: space-between;
 }
+
 .pre {
 	white-space: pre-wrap;
 }

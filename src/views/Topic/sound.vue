@@ -208,6 +208,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.sound::-webkit-scrollbar {
+	display: none;
+}
 .ipt-listen {
 	min-width: 100px;
 	height: 30px;
