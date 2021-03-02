@@ -366,7 +366,7 @@ export default {
 				let id = e.target.id
 				obj[id] = eleMap[this.currentIndex].getAttribute('name')
 				this.mergeData(obj)
-				e.target.innerHTML = `<span draggable="true"  name="${e.target.id}" style="display:block">${txt}</span>`
+				e.target.innerHTML = `<span draggable="false"  name="${e.target.id}" style="display:block">${txt}</span>`
 				_this.$set(
 					_this.idObj,
 					eleMap[this.currentIndex].getAttribute('name'),

@@ -111,7 +111,7 @@ const Vue = {
 				let id = e.target.id
 				obj[id] = eleMap[currentIndex].getAttribute('name')
 				_this.$emit('changeData', obj)
-				e.target.innerHTML = `<span draggable="true"  name="${e.target.id}" style="display:block">${txt}</span>`
+				e.target.innerHTML = `<span draggable="false"  name="${e.target.id}" style="display:block">${txt}</span>`
 				_this.$set(_this.idObj, eleMap[currentIndex].getAttribute('name'), id)
 			}
 		}
