@@ -288,7 +288,7 @@ export default {
 					}
 				})
 			}
-
+			txt = txt.replaceAll('*', '')
 			return txt
 		},
 		getCurrentHtml(item) {
@@ -347,6 +347,7 @@ export default {
 					}
 				}
 			})
+			txt = txt.replaceAll('*', '')
 			return txt
 		},
 		// 获取当前题号
@@ -422,6 +423,7 @@ export default {
 				}" name="${item.id}"></input></div>`
 			)
 			if (!~this.fillIdList.indexOf(item.id)) this.fillIdList.push(item.id)
+			txt = txt.replaceAll('*', '')
 			return txt
 		}
 	},

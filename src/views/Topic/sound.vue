@@ -190,6 +190,7 @@ export default {
 					}
 				})
 			}
+			txt = txt.replaceAll('*', '')
 			return txt
 		},
 		// 获取当前题号
@@ -224,6 +225,7 @@ export default {
 					id
 				)}" />`
 			)
+			txt = txt.replaceAll('*', '')
 			return txt
 		}
 	}
