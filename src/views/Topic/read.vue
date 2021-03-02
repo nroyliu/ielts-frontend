@@ -295,7 +295,7 @@ export default {
 			let txt = marked(item.content)
 
 			item.questions.forEach((item1) => {
-				if (~txt.indexOf('[i[=NO=]]')) {
+				if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
 					let rule = /\[i.*\]/
 					let arr = []
 					if (txt.match(rule) == null) return txt

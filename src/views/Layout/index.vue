@@ -67,9 +67,11 @@ export default {
 		},
 		getExam() {
 			this.id = this.$route.query.id || this.$utils.getSession('currentId')
-			let currentSection = JSON.parse(localStorage.currentSection) || 'sound'
-			if (!localStorage.currentSection) {
-				this.$utils.setSession('currentSection', currentSection)
+			let currentSection = sessionStorage.currentSection
+				? JSON.parse(sessionStorage.currentSection)
+				: 'sound'
+			if (!sessionStorage.currentSection) {
+				sessionStorage.currentSection = JSON.stringify(currentSection)
 			}
 			switch (currentSection) {
 				case 'sound':
@@ -84,7 +86,6 @@ export default {
 			}
 		},
 		getListen() {
-			console.log(123)
 			getListen({
 				id: this.id
 			}).then((res) => {

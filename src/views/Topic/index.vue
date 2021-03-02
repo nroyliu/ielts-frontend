@@ -106,13 +106,14 @@ export default {
 	},
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
-		this.currentSection = this.$utils.getSession('currentSection')
+		this.currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
+		console.log(this.currentSection)
 		this.audioUrl = this.topic[0].audio_url
 		setTimeout(() => {
 			this.audio = document.getElementById('audio')
 			this.audioUrl = this.topic[this.currentPart - 1].audio_url
 		})
-		this.clientHeight = this.getClientHeight() * 0.7
+		this.clientHeight = this.getClientHeight() * 0.65
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
 	methods: {

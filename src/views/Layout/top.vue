@@ -22,15 +22,15 @@ export default {
 	},
 	methods: {
 		finnishCur() {
-			let currentSection = this.$utils.getSession('currentSection')
+			let currentSection = JSON.parse(sessionStorage.currentSection)
 			if (currentSection === 'sound') {
 				currentSection = 'read'
-				this.$utils.setSession('currentSection', currentSection)
+				sessionStorage.currentSection = JSON.stringify(currentSection)
 				this.$emit('updatePart')
 				this.$router.replace({ path: '/main', query: this.$route.query.id })
 			} else if (currentSection === 'read') {
 				currentSection = 'write'
-				this.$utils.setSession('currentSection', currentSection)
+				sessionStorage.currentSection = JSON.stringify(currentSection)
 				this.$emit('updatePart')
 				this.$router.replace({ path: '/main', query: this.$route.query.id })
 			} else {

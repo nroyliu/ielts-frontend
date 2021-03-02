@@ -12,34 +12,47 @@
 									<div class="warnning">
 										模拟机考使用须知
 										<br />
-										<br />模拟机考为【限时全真模拟考试】，在测试前，请注意以下事项
 										<br />
-										<br />1
+										模拟机考为【限时全真模拟考试】，在测试前，请注意以下事项
+										<br />
+										<br />
+										1
 										考试计时：一旦开始考试后，就会开始计时，中途不能暂停。听力部分计时为音频时间+2min检查时间（约在25
 										- 35分钟）；阅读部分计时
-										<br />60min；写作部分计时60min。如果中途退出（关闭窗口或网络断开等），之前填写的答案将会自动保存。在机考网页“个人中心
-										- 模考记录中”，
-										<br />可以找到作答到一半的题目记录，并可以继续考试。继续考试的倒计时会承接上次退出时的剩余时间。
 										<br />
-										<br />2
+										60min；写作部分计时60min。如果中途退出（关闭窗口或网络断开等），之前填写的答案将会自动保存。在机考网页“个人中心
+										- 模考记录中”，
+										<br />
+										可以找到作答到一半的题目记录，并可以继续考试。继续考试的倒计时会承接上次退出时的剩余时间。
+										<br />
+										<br />
+										2
 										答卷提交：每科目倒计时结束后会自动提交并进入下一科目；或点击右上角Finish
 										Section可提前提交当前科目的答卷，提交后将不可返回修改此科目答案，自动进入下一科目的作答。
 										<br />
-										<br />3
+										<br />
+										3
 										成绩报告：当一套题目完整提交后（听力、阅读、写作三部分都完成并提交），将会自动跳转成绩报告，可以看到自己的听力、阅读分数和错题详情。如果未100%提交答卷，不会生成成绩报告。
 										<br />
-										<br />4 答题前准备：
-										<br />1）在进入模考前，请确认自己的网络连接正常，耳机或电脑声音播放正常，不要将电脑或耳机处于静音状态。
-										<br />2）关闭自行安装的智能输入法，将输入法调节到原始的英文输入状态，确认无词汇联想等功能，否则将影响你的真实成绩。
-										<br />3）如果安装了一些翻译插件，如有道翻译等，具有网页及文字自动翻译功能，请提前将插件关闭或退出，避免影响正常做题。
+										<br />
+										4 答题前准备：
+										<br />
+										1）在进入模考前，请确认自己的网络连接正常，耳机或电脑声音播放正常，不要将电脑或耳机处于静音状态。
+										<br />
+										2）关闭自行安装的智能输入法，将输入法调节到原始的英文输入状态，确认无词汇联想等功能，否则将影响你的真实成绩。
+										<br />
+										3）如果安装了一些翻译插件，如有道翻译等，具有网页及文字自动翻译功能，请提前将插件关闭或退出，避免影响正常做题。
 										<br />
 										<br />
-										<br />祝宝宝取得好成绩！
+										<br />
+										祝宝宝取得好成绩！
 										<br />
 									</div>
 								</template>
 								<span class="el-dropdown-link">
-									<i class="el-tooltip iconfont el-icon-question" tabindex="0">模考须知</i>
+									<i class="el-tooltip iconfont el-icon-question" tabindex="0">
+										模考须知
+									</i>
 								</span>
 							</el-tooltip>
 						</div>
@@ -50,14 +63,18 @@
 									class="item_filter"
 									:class="{ 'item_filter-active': !currentType }"
 									@click="checkType('')"
-								>全部</div>
+								>
+									全部
+								</div>
 								<div
 									class="item_filter"
 									v-for="(item, index) in subType"
 									:key="index"
 									@click="checkType(item.id)"
 									:class="{ 'item_filter-active': currentType === item.id }"
-								>{{ item.name }}</div>
+								>
+									{{ item.name }}
+								</div>
 							</div>
 							<div class="filter_item non-border">
 								<div class="item_title">题目来源</div>
@@ -77,8 +94,13 @@
 									:class="{ 'item_filter-active': currentOri === item.id }"
 								>
 									{{ item.name }}
-									<div class="freeTag" v-if="item.is_need_unlock" style="right: -4em;">
-										<div class="triangle"></div>付费购买
+									<div
+										class="freeTag"
+										v-if="item.is_need_unlock"
+										style="right: -4em;"
+									>
+										<div class="triangle"></div>
+										付费购买
 									</div>
 								</div>
 							</div>
@@ -92,17 +114,31 @@
 							<el-collapse>
 								<el-collapse-item v-for="(item1, index1) in item" :key="index1">
 									<template #title>
-										<div style="padding-left: 10px;color:#303133;font-size:13px">{{ `· ${item1.name}` }}</div>
+										<div
+											style="padding-left: 10px;color:#303133;font-size:13px"
+										>
+											{{ `· ${item1.name}` }}
+										</div>
 									</template>
-									<div class="item-paper" v-for="(item2, index2) in item1.papers" :key="index2">
+									<div
+										class="item-paper"
+										v-for="(item2, index2) in item1.papers"
+										:key="index2"
+									>
 										<div class="paper-name">{{ item2.name }}</div>
-										<div class="practice_time">练习人次 {{ item2.exercise_count }}</div>
+										<div class="practice_time">
+											练习人次 {{ item2.exercise_count }}
+										</div>
 										<!---->
 										<div class="practice_progress">
-											<span v-if="item2.record != null">已完成 {{ item2.record | disposeData }}</span>
+											<span v-if="item2.record != null">
+												已完成 {{ item2.record | disposeData }}
+											</span>
 											<span v-else>已完成 0%</span>
 										</div>
-										<div class="practice_button" @click="beginExam(item2.id)">开始考试</div>
+										<div class="practice_button" @click="beginExam(item2.id)">
+											开始考试
+										</div>
 									</div>
 								</el-collapse-item>
 							</el-collapse>
@@ -211,7 +247,7 @@ import header from '@/components/Header'
 import { getSub, getOriginalOptions, getPaper, startExam } from '@/server/api'
 export default {
 	components: {
-		'com-header': header,
+		'com-header': header
 	},
 	data() {
 		return {
@@ -219,7 +255,7 @@ export default {
 			originOption: '',
 			currentType: '',
 			currentOri: '',
-			paper: [],
+			paper: []
 		}
 	},
 	methods: {
@@ -228,15 +264,15 @@ export default {
 		},
 		startExam(id) {
 			startExam({
-				paper_id: id,
+				paper_id: id
 			}).then((res) => {
 				this.$router.push({
 					path: '/main',
 					query: {
-						id: id,
-					},
+						id: id
+					}
 				})
-				this.$utils.setSession('currentSection', 'sound')
+				sessionStorage.currentSection = JSON.stringify('sound')
 				this.$utils.setSession('currentId', id)
 				this.$utils.setSession('curInfo', res)
 			})
@@ -257,7 +293,7 @@ export default {
 			this.paper = []
 			getPaper({
 				subject_id: this.currentType,
-				material_id: this.currentOri,
+				material_id: this.currentOri
 			}).then((res) => {
 				this.originOption.forEach((item) => {
 					let arr = []
@@ -266,7 +302,7 @@ export default {
 						if (item.id === item1.material_id) {
 							obj = {
 								originName: item.name,
-								...item1,
+								...item1
 							}
 							arr.push(obj)
 						}
@@ -282,7 +318,7 @@ export default {
 		checkType(id) {
 			this.currentType = id
 			this.getPaper()
-		},
+		}
 	},
 	filters: {
 		disposeData(data) {
@@ -296,11 +332,11 @@ export default {
 				}
 			})
 			return value ? value : '0%'
-		},
+		}
 	},
 	mounted() {
 		this.getSub()
-	},
+	}
 }
 </script>
 
