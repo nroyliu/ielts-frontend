@@ -27,14 +27,14 @@ export default {
 				currentSection = 'read'
 				this.$utils.setSession('currentSection', currentSection)
 				this.$emit('updatePart')
-				this.$router.replace('/main')
+				this.$router.replace({ path: '/main', query: this.$route.query.id })
 			} else if (currentSection === 'read') {
 				currentSection = 'write'
 				this.$utils.setSession('currentSection', currentSection)
 				this.$emit('updatePart')
-				this.$router.replace('/main')
+				this.$router.replace({ path: '/main', query: this.$route.query.id })
 			} else {
-				this.$router.push('/analysis')
+				this.$router.replace({ path: '/analysis', query: this.$route.query.id })
 			}
 		}
 	},

@@ -46,11 +46,12 @@ export default {
 			}
 		}
 	},
-	mounted() {
-		this.isShow = sessionStorage.isShow ? true : false
+	created() {
+		this.isShow = localStorage.isShow ? true : false
 		this.id = this.$route.query.id || this.$utils.getSession('currentId')
 		this.getExam()
 	},
+	mounted() {},
 	data() {
 		return {
 			dialogVisible: true,
@@ -62,12 +63,12 @@ export default {
 	methods: {
 		closeWarn() {
 			this.isShow = true
-			sessionStorage['isShow'] = true
+			localStorage['isShow'] = true
 		},
 		getExam() {
 			this.id = this.$route.query.id || this.$utils.getSession('currentId')
-			let currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
-			if (!sessionStorage.currentSection) {
+			let currentSection = JSON.parse(localStorage.currentSection) || 'sound'
+			if (!localStorage.currentSection) {
 				this.$utils.setSession('currentSection', currentSection)
 			}
 			switch (currentSection) {

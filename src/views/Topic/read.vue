@@ -235,50 +235,56 @@ export default {
 			// 针对拖拽单独处理
 			if (isMain) {
 				// 将 [d[=NO=]]转换为方框 保存可以drag的标签id
-				this.topic.groups.forEach((item1) => {
-					if (item1.type === 34 && item1.mode == 342) {
-						item1.questions.forEach((item) => {
+				this.topic.groups.forEach((item1, index) => {
+					if (~txt.indexOf('[i[=NO=]]')) {
+						let rule = /\[i.*\]/
+						if (txt.match(rule) == null) return txt
+						let flag = txt.match(rule)[0]
+						if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
 							txt = txt.replace(
-								'[d[=NO=]]',
-								`<span style="display:flex;align-items:center;"><span class="ondrag" style="margin:0 6px;" wrap="true" placeholder="${this.pagegation.indexOf(
-									item.id
-								) + 1}" draggable="false" id="${item.id}"></span></span>`
+								'[ii[=NO=] and [=NO=]]',
+								`<input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" /> and <input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" />`
 							)
-							if (!~this.idDragList.indexOf(item.id))
-								this.idDragList.push(item.id)
-							if (!~this.fillIdList.indexOf(item.id))
-								this.fillIdList.push(item.id)
-						})
-					}
-					if (
-						(item1.type === 34 && item1.mode == 345) ||
-						(item1.type === 34 && item1.mode == 344)
-					) {
-						item1.questions.forEach((item) => {
-							txt = txt.replace(
-								'[d[=NO=]]',
-								`<div style="display:inline-flex;align-items:center;"><input  class="ondrag" style="margin:0 6px;" id="${
-									item.id
-								}" name="${item.id}" placeholder="${this.pagegation.indexOf(
-									item.id
-								) + 1}"></input></div>`
-							)
-							if (!~this.fillIdList.indexOf(item.id))
-								this.fillIdList.push(item.id)
-						})
-					}
-
-					if (item1.type === 32 && item1.mode == 323) {
-						item1.questions.forEach((item) => {
+							if (!~this.fillIdList.indexOf(item1.id)) {
+								this.fillIdList.push(item1.id)
+							}
+						} else {
 							txt = txt.replace(
 								'[i[=NO=]]',
-								`<span style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" placeholder="${this.pagegation.indexOf(
-									item.id
-								) + 1}" id="${item.id}" name="${item.id}"></input></span>`
+								`<input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" />`
 							)
-							if (!~this.fillIdList.indexOf(item.id))
-								this.fillIdList.push(item.id)
-						})
+
+							if (!~this.fillIdList.indexOf(item1.id)) {
+								this.fillIdList.push(item1.id)
+							}
+						}
+					}
+					if (~txt.indexOf('[d[=NO=]]')) {
+						let rule = /\[d.*\]/
+						if (txt.match(rule) == null) return txt
+						let flag = txt.match(rule)[0]
+						txt = txt.replace(
+							'[d[=NO=]]',
+							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+								item1.id
+							}" placeholder="${this.getIndex(item1.id)}" />`
+						)
+
+						if (!~this.fillIdList.indexOf(item1.id)) {
+							this.fillIdList.push(item1.id)
+						}
 					}
 				})
 			}
@@ -287,29 +293,71 @@ export default {
 		},
 		getCurrentHtml(item) {
 			let txt = marked(item.content)
-			item.questions.forEach((item) => {
-				txt = txt.replace(
-					'[i[=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" placeholder="${this.pagegation.indexOf(
-						item.id
-					) + 1}" id="${item.id}" name="${item.id}"></input></div>`
-				)
-				txt = txt.replace(
-					'[ii[=NO=] whales and [=NO=]]',
-					`<span style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;"   id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
-				)
-				txt = txt.replace(
-					'[ii[=NO=] and [=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
-				)
-				txt = txt.replace(
-					'[d[=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" id="${
-						item.id
-					}" name="${item.id}" placeholder="${this.pagegation.indexOf(item.id) +
-						1}"></input></div>`
-				)
-				if (!~this.fillIdList.indexOf(item.id)) this.fillIdList.push(item.id)
+
+			item.questions.forEach((item1) => {
+				if (~txt.indexOf('[i[=NO=]]')) {
+					let rule = /\[i.*\]/
+					let arr = []
+					if (txt.match(rule) == null) return txt
+					let flag = txt.match(rule)[0]
+					if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
+						txt = txt.replace(
+							'[ii[=NO=] and [=NO=]]',
+							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+								item1.id
+							}" placeholder="${this.getIndex(
+								item1.id
+							)}" /> and <input type="text" class="ipt-listen" id="${
+								item1.id
+							}"  name="${item1.id}" placeholder="${this.getIndex(
+								item1.id
+							)}" />`
+						)
+						if (!~this.fillIdList.indexOf(item1.id)) {
+							this.fillIdList.push(item1.id)
+						}
+					} else if (~flag.indexOf('[ii[=NO=] whales and [=NO=]]')) {
+						txt = txt.replace(
+							'[ii[=NO=] whales and [=NO=]]',
+							`<span style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;"   id="${
+								item.id
+							}" placeholder="${this.getIndex(item1.id)}"  name="${
+								item.id
+							}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${
+								item.id
+							}" name="${item.id}" placeholder="${this.getIndex(
+								item1.id
+							)}" ></input></span>`
+						)
+					} else {
+						txt = txt.replace(
+							'[i[=NO=]]',
+							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+								item1.id
+							}" placeholder="${this.getIndex(item1.id)}" />`
+						)
+
+						if (!~this.fillIdList.indexOf(item1.id)) {
+							this.fillIdList.push(item1.id)
+						}
+					}
+				}
+
+				if (~txt.indexOf('[d[=NO=]]')) {
+					let rule = /\[d.*\]/
+					if (txt.match(rule) == null) return txt
+					let flag = txt.match(rule)[0]
+					txt = txt.replace(
+						'[d[=NO=]]',
+						`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+							item1.id
+						}" placeholder="${this.getIndex(item1.id)}" />`
+					)
+
+					if (!~this.fillIdList.indexOf(item1.id)) {
+						this.fillIdList.push(item1.id)
+					}
+				}
 			})
 			return txt
 		},

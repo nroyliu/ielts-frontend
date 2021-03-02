@@ -71,7 +71,7 @@ export default {
 		}
 	},
 	mounted() {
-		this.topic = JSON.parse(sessionStorage.topic)
+		this.topic = JSON.parse(localStorage.topic)
 		this.topic.forEach((item, index) => {
 			this.part[`${index + 1}`] = []
 			this.topic[index].groups.forEach((item1, index1) => {

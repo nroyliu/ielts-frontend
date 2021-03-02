@@ -68,7 +68,6 @@
 		</div>
 	</div>
 </template>
-
 <script>
 import marked from 'marked'
 import singleOption from '../../components/singleOption'
@@ -134,10 +133,14 @@ export default {
 		},
 		// 获取html格式
 		getHtml(markdown, item = '') {
-			let txt = marked(markdown)
+			let txt = marked(markdown, { sanitize: false })
+			let rule = /\[i.*\]/
+			let arr = []
 			if (item) {
 				item.questions.forEach((item1, index) => {
-					if (~txt.indexOf('[ii[=NO=] and [=NO=]]')) {
+					if (txt.match(rule) == null) return txt
+					let flag = txt.match(rule)[0]
+					if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
 						txt = txt.replace(
 							'[ii[=NO=] and [=NO=]]',
 							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${

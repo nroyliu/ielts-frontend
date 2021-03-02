@@ -2,10 +2,10 @@ import Vue from 'vue'
 
 export default {
     setSession(key, value) {
-        sessionStorage[key] = JSON.stringify(value)
+        localStorage[key] = JSON.stringify(value)
     },
     getSession(key) {
-        return sessionStorage[key] ? JSON.parse(sessionStorage[key]) : ''
+        return localStorage[key] ? JSON.parse(localStorage[key]) : ''
     },
 }
 
