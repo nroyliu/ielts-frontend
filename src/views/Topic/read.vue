@@ -122,10 +122,10 @@
 					</div>
 					<!-- 表格填写 -->
 					<div v-if="item.type === 32 && item.mode === 322">
-						<pre
+						<div
 							class="markdown-body table"
 							v-html="getCurrentHtml(item)"
-						></pre>
+						></div>
 					</div>
 					<!-- 阅读填空type 32 mode == 323-->
 					<div
@@ -489,7 +489,6 @@ export default {
 	transition: all 0.5s;
 }
 .markdown-body .table {
-	table-layout: fixed;
 }
 .left-content {
 	flex: 0.5;
