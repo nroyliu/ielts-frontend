@@ -134,20 +134,20 @@ export default {
 		// 获取html格式
 		getHtml(markdown, item = '') {
 			let txt = marked(markdown, { sanitize: false })
-			let rule = /\[i.*\]/
-			let arr = []
+			let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
 			if (item) {
 				item.questions.forEach((item1, index) => {
 					if (txt.match(rule) == null) return txt
 					let flag = txt.match(rule)[0]
-					if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
+					if (~flag.indexOf('[ii[=NO=]')) {
+						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
 						txt = txt.replace(
-							'[ii[=NO=] and [=NO=]]',
+							flag,
 							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
 								item1.id
 							}" placeholder="${this.getIndex(
 								item1.id
-							)}" /> and <input type="text" class="ipt-listen" id="${
+							)}" /> ${text} <input type="text" class="ipt-listen" id="${
 								item1.id
 							}"  name="${item1.id}" placeholder="${this.getIndex(
 								item1.id

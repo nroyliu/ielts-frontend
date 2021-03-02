@@ -296,18 +296,18 @@ export default {
 
 			item.questions.forEach((item1) => {
 				if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
-					let rule = /\[i.*\]/
-					let arr = []
+					let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
 					if (txt.match(rule) == null) return txt
 					let flag = txt.match(rule)[0]
-					if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
+					if (~flag.indexOf('[ii[=NO=]')) {
+						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
 						txt = txt.replace(
-							'[ii[=NO=] and [=NO=]]',
+							flag,
 							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
 								item1.id
 							}" placeholder="${this.getIndex(
 								item1.id
-							)}" /> and <input type="text" class="ipt-listen" id="${
+							)}" /> ${text} <input type="text" class="ipt-listen" id="${
 								item1.id
 							}"  name="${item1.id}" placeholder="${this.getIndex(
 								item1.id
@@ -316,22 +316,10 @@ export default {
 						if (!~this.fillIdList.indexOf(item1.id)) {
 							this.fillIdList.push(item1.id)
 						}
-					} else if (~flag.indexOf('[ii[=NO=] whales and [=NO=]]')) {
-						txt = txt.replace(
-							'[ii[=NO=] whales and [=NO=]]',
-							`<span style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;"   id="${
-								item.id
-							}" placeholder="${this.getIndex(item1.id)}"  name="${
-								item.id
-							}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${
-								item.id
-							}" name="${item.id}" placeholder="${this.getIndex(
-								item1.id
-							)}" ></input></span>`
-						)
 					} else {
+						console.log(flag)
 						txt = txt.replace(
-							'[i[=NO=]]',
+							flag + ']',
 							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
 								item1.id
 							}" placeholder="${this.getIndex(item1.id)}" />`
