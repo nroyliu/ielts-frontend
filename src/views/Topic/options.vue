@@ -26,19 +26,19 @@
 						:ref="`${topic[index].groups[index1].questions[index2].id}`"
 						:href="`#${topic[index].groups[index1].questions[index2].id}`"
 						@click="
-								selectItem(
-									pagegation.indexOf(
-										topic[index].groups[index1].questions[index2].id
-									)
+							selectItem(
+								pagegation.indexOf(
+									topic[index].groups[index1].questions[index2].id
 								)
-							"
+							)
+						"
 					>
 						<!-- 题目所对应part-->
 						<a>
 							{{
-							pagegation.indexOf(
-							topic[index].groups[index1].questions[index2].id
-							) + 1
+								pagegation.indexOf(
+									topic[index].groups[index1].questions[index2].id
+								) + 1
 							}}
 						</a>
 					</a>
@@ -67,7 +67,7 @@ export default {
 			topic: [],
 			pagegation: [],
 			currentPage: 1,
-			part: {},
+			part: {}
 		}
 	},
 	mounted() {
@@ -111,8 +111,8 @@ export default {
 					return key
 				}
 			}
-		},
-	},
+		}
+	}
 }
 </script>
 
@@ -151,7 +151,7 @@ export default {
 	padding: 8px;
 	box-sizing: border-box;
 	width: 60%;
-	height: 75px;
+	height: 90px;
 	border: 1px solid #ccc;
 	border-radius: 8px;
 	-webkit-box-shadow: 0 0.0714em 0.214em rgba(0, 0, 0, 0.25);

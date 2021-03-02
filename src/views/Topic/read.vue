@@ -240,12 +240,9 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[d[=NO=]]',
-								`<span style="display:flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<span style="display:flex;align-items:center;"><span class="ondrag" style="margin:0 6px;" wrap="true" placeholder="${this.pagegation.indexOf(
 									item.id
-								) +
-									1}.</h5 ><span class="ondrag" style="margin:0 6px;" wrap="true" draggable="false" id="${
-									item.id
-								}"></span></span>`
+								) + 1}" draggable="false" id="${item.id}"></span></span>`
 							)
 							if (!~this.idDragList.indexOf(item.id))
 								this.idDragList.push(item.id)
@@ -260,11 +257,11 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[d[=NO=]]',
-								`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<div style="display:inline-flex;align-items:center;"><input  class="ondrag" style="margin:0 6px;" id="${
 									item.id
-								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
+								}" name="${item.id}" placeholder="${this.pagegation.indexOf(
 									item.id
-								}" name="${item.id}"></input></div>`
+								) + 1}"></input></div>`
 							)
 							if (!~this.fillIdList.indexOf(item.id))
 								this.fillIdList.push(item.id)
@@ -275,11 +272,9 @@ export default {
 						item1.questions.forEach((item) => {
 							txt = txt.replace(
 								'[i[=NO=]]',
-								`<span style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+								`<span style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" placeholder="${this.pagegation.indexOf(
 									item.id
-								) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
-									item.id
-								}" name="${item.id}"></input></span>`
+								) + 1}" id="${item.id}" name="${item.id}"></input></span>`
 							)
 							if (!~this.fillIdList.indexOf(item.id))
 								this.fillIdList.push(item.id)
@@ -295,27 +290,24 @@ export default {
 			item.questions.forEach((item) => {
 				txt = txt.replace(
 					'[i[=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+					`<div style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" placeholder="${this.pagegation.indexOf(
 						item.id
-					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
-						item.id
-					}" name="${item.id}"></input></div>`
+					) + 1}" id="${item.id}" name="${item.id}"></input></div>`
 				)
 				txt = txt.replace(
 					'[ii[=NO=] whales and [=NO=]]',
-					`<span style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
+					`<span style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;"   id="${item.id}" name="${item.id}"></input> whales and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></span>`
 				)
 				txt = txt.replace(
 					'[ii[=NO=] and [=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;"></h5 ><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
+					`<div style="display:inline-flex;align-items:center;"><input class="" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input>	 and <input class="ondrag" style="margin:0 6px;" id="${item.id}" name="${item.id}"></input></div>`
 				)
 				txt = txt.replace(
 					'[d[=NO=]]',
-					`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
+					`<div style="display:inline-flex;align-items:center;"><input class="ondrag" style="margin:0 6px;" id="${
 						item.id
-					) + 1}.</h5 ><input class="ondrag" style="margin:0 6px;" id="${
-						item.id
-					}" name="${item.id}"></input></div>`
+					}" name="${item.id}" placeholder="${this.pagegation.indexOf(item.id) +
+						1}"></input></div>`
 				)
 				if (!~this.fillIdList.indexOf(item.id)) this.fillIdList.push(item.id)
 			})
