@@ -134,31 +134,51 @@ export default {
 		// 获取html格式
 		getHtml(markdown, item = '') {
 			let txt = marked(markdown, { sanitize: false })
-			let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
 			if (item) {
 				item.questions.forEach((item1, index) => {
-					if (txt.match(rule) == null) return txt
-					let flag = txt.match(rule)[0]
-					if (~flag.indexOf('[ii[=NO=]')) {
-						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
-						txt = txt.replace(
-							flag,
-							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
-								item1.id
-							}" placeholder="${this.getIndex(
-								item1.id
-							)}" /> ${text} <input type="text" class="ipt-listen" id="${
-								item1.id
-							}"  name="${item1.id}" placeholder="${this.getIndex(
-								item1.id
-							)}" />`
-						)
-						if (!~this.fillIdList.indexOf(item1.id)) {
-							this.fillIdList.push(item1.id)
+					if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
+						let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+						if (txt.match(rule) == null) return txt
+						let flag = txt.match(rule)[0]
+						if (~flag.indexOf('[ii[=NO=]')) {
+							let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
+							txt = txt.replace(
+								flag,
+								`<input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" /> ${text} <input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" />`
+							)
+							if (!~this.fillIdList.indexOf(item1.id)) {
+								this.fillIdList.push(item1.id)
+							}
+						} else {
+							txt = txt.replace(
+								'[i[=NO=]]',
+								`<input type="text" class="ipt-listen" id="${
+									item1.id
+								}"  name="${item1.id}" placeholder="${this.getIndex(
+									item1.id
+								)}" />`
+							)
+
+							if (!~this.fillIdList.indexOf(item1.id)) {
+								this.fillIdList.push(item1.id)
+							}
 						}
-					} else {
+					}
+
+					if (~txt.indexOf('[d[=NO=]]')) {
+						let rule = /\[d.*\]/
+						if (txt.match(rule) == null) return txt
+						let flag = txt.match(rule)[0]
 						txt = txt.replace(
-							'[i[=NO=]]',
+							'[d[=NO=]]',
 							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
 								item1.id
 							}" placeholder="${this.getIndex(item1.id)}" />`
