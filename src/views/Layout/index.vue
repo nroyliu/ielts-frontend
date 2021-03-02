@@ -48,7 +48,7 @@ export default {
 	},
 	mounted() {
 		this.isShow = sessionStorage.isShow ? true : false
-		this.id = this.$utils.getSession('currentId')
+		this.id = this.$route.query.id || this.$utils.getSession('currentId')
 		this.getExam()
 	},
 	data() {
@@ -65,8 +65,11 @@ export default {
 			sessionStorage['isShow'] = true
 		},
 		getExam() {
-			this.id = this.$utils.getSession('currentId')
-			let currentSection = this.$utils.getSession('currentSection')
+			this.id = this.$route.query.id || this.$utils.getSession('currentId')
+			let currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
+			if (!sessionStorage.currentSection) {
+				this.$utils.setSession('currentSection', currentSection)
+			}
 			switch (currentSection) {
 				case 'sound':
 					this.getListen()
@@ -80,6 +83,7 @@ export default {
 			}
 		},
 		getListen() {
+			console.log(123)
 			getListen({
 				id: this.id
 			}).then((res) => {
