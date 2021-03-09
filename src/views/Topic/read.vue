@@ -100,8 +100,12 @@
 						<div v-html="getCurrentHtml(item)"></div>
 						<div>
 							<div v-for="item1 in item.options" :key="item1.option">
-								<span>{{ item1.option }}.</span>
-								<span>{{ item1.text }}</span>
+								<p class="options">
+									<span style="font-weight:bold;margin-right:10px;">
+										{{ item1.option }}.
+									</span>
+									<span>{{ item1.text }}</span>
+								</p>
 							</div>
 						</div>
 					</div>
@@ -232,22 +236,31 @@ export default {
 		// 获取html格式
 		getHtml(markdown, isMain = false) {
 			let txt = marked(markdown)
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!txt.match(exampleRule)) {
+				txt = txt.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				txt = txt.replace(']]', '</span>')
+			}
 			// 针对拖拽单独处理
 			if (isMain) {
 				// 将 [d[=NO=]]转换为方框 保存可以drag的标签id
 				this.topic.groups.forEach((item1, index) => {
-					if (~txt.indexOf('[i[=NO=]]')) {
-						let rule = /\[i.*\]/
+					if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
+						let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
 						if (txt.match(rule) == null) return txt
 						let flag = txt.match(rule)[0]
-						if (~flag.indexOf('[ii[=NO=] and [=NO=]]')) {
+						if (~flag.indexOf('[ii[=NO=]')) {
+							let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
 							txt = txt.replace(
-								'[ii[=NO=] and [=NO=]]',
+								flag,
 								`<input type="text" class="ipt-listen" id="${
 									item1.id
 								}"  name="${item1.id}" placeholder="${this.getIndex(
 									item1.id
-								)}" /> and <input type="text" class="ipt-listen" id="${
+								)}" /> ${text} <input type="text" class="ipt-listen" id="${
 									item1.id
 								}"  name="${item1.id}" placeholder="${this.getIndex(
 									item1.id
@@ -293,7 +306,14 @@ export default {
 		},
 		getCurrentHtml(item) {
 			let txt = marked(item.content)
-
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!txt.match(exampleRule)) {
+				txt = txt.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				txt = txt.replace(']]', '</span>')
+			}
 			item.questions.forEach((item1) => {
 				if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
 					let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
@@ -303,11 +323,11 @@ export default {
 						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
 						txt = txt.replace(
 							flag,
-							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+							`<input type="text" style="width:80px;" class="ipt-listen" id="${
 								item1.id
-							}" placeholder="${this.getIndex(
+							}"  name="${item1.id}" placeholder="${this.getIndex(
 								item1.id
-							)}" /> ${text} <input type="text" class="ipt-listen" id="${
+							)}" /> ${text} <input style="width:80px;" type="text" class="ipt-listen" id="${
 								item1.id
 							}"  name="${item1.id}" placeholder="${this.getIndex(
 								item1.id
@@ -317,12 +337,13 @@ export default {
 							this.fillIdList.push(item1.id)
 						}
 					} else {
-						console.log(flag)
 						txt = txt.replace(
 							flag + ']',
-							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+							`<input type="text" style="width:100px;" class="ipt-listen" id="${
 								item1.id
-							}" placeholder="${this.getIndex(item1.id)}" />`
+							}"  name="${item1.id}" placeholder="${this.getIndex(
+								item1.id
+							)}" />`
 						)
 
 						if (!~this.fillIdList.indexOf(item1.id)) {
@@ -414,6 +435,14 @@ export default {
 		},
 		dispose(item) {
 			let txt = marked(item.content)
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!txt.match(exampleRule)) {
+				txt = txt.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				txt = txt.replace(']]', '</span>')
+			}
 			txt = txt.replace(
 				'[i[=NO=]]',
 				`<div style="display:inline-flex;align-items:center;"><h5 style="margin:0 6px ;">${this.pagegation.indexOf(
@@ -490,8 +519,18 @@ export default {
 	text-align: center;
 	transition: all 0.5s;
 }
-.markdown-body .table {
+
+.markdown-body table {
+	border: 1px solid #ccc;
 }
+
+.table {
+	padding: 0 15px;
+	box-sizing: border-box;
+	font-size: 14px;
+	color: #212529;
+}
+
 .left-content {
 	flex: 0.5;
 	padding: 0 30px 0 15px;
@@ -534,9 +573,6 @@ export default {
 	}
 }
 
-.markdown-body {
-	font-weight: bold;
-}
 .m-options {
 	min-width: 100px;
 	.dragable span {
@@ -550,5 +586,9 @@ export default {
 }
 .single-page-s-s {
 	margin-bottom: 10px;
+}
+.options {
+	margin: 10px;
+	font-size: 14px;
 }
 </style>

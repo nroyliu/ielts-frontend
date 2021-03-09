@@ -2,7 +2,9 @@
 	<div class="wrappers">
 		<div class="img-box">
 			<img src="../../assets/userCheck.png" alt />
-			<div style="color: #212529; font-size: 14px;line-height:14px;">Confirm your details</div>
+			<div style="color: #212529; font-size: 14px;line-height:14px;">
+				Confirm your details
+			</div>
 		</div>
 		<div class="bc-box">
 			<div class="title">EXAMPLE</div>
@@ -17,9 +19,13 @@
 					<div>Candidate number: xxxx xxxx - 123456</div>
 				</li>
 			</ul>
-			<div class="txt">If your details aren't correct, please inform the invigilator.</div>
+			<div class="txt">
+				If your details aren't correct, please inform the invigilator.
+			</div>
 			<div style="width: 100%; text-align: center;">
-				<el-button type="info" @click="goConfirm()">My details are correct</el-button>
+				<el-button type="info" @click="goConfirm()">
+					My details are correct
+				</el-button>
 			</div>
 		</div>
 	</div>
@@ -32,12 +38,22 @@ export default {
 	},
 	methods: {
 		goConfirm() {
-			this.$router.push({
-				path: '/main/testSound',
-				query: { id: this.$route.query.id },
-			})
-		},
-	},
+			let type = sessionStorage.currentSection
+				? JSON.parse(sessionStorage.currentSection)
+				: 'sound'
+			if (type == 'sound') {
+				this.$router.push({
+					path: '/main/testSound',
+					query: { id: this.$route.query.id }
+				})
+			} else {
+				this.$router.push({
+					path: '/main/confirm',
+					query: { id: this.$route.query.id }
+				})
+			}
+		}
+	}
 }
 </script>
 

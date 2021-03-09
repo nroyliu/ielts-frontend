@@ -134,6 +134,16 @@ export default {
 		// 获取html格式
 		getHtml(markdown, item = '') {
 			let txt = marked(markdown, { sanitize: false })
+
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!txt.match(exampleRule)) {
+				txt = txt.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				txt = txt.replace(']]', '</span>')
+			}
+
 			if (item) {
 				item.questions.forEach((item1, index) => {
 					if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
@@ -219,6 +229,14 @@ export default {
 		},
 		getHtmlItem(markdown, id) {
 			let txt = marked(markdown)
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!txt.match(exampleRule)) {
+				txt = txt.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				txt = txt.replace(']]', '</span>')
+			}
 			txt = txt.replace(
 				'[i[=NO=]]',
 				`<input type="text" class="ipt-listen" id="${id}"  name="${id}" placeholder="${this.getIndex(

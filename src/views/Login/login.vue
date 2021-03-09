@@ -44,16 +44,18 @@
 					:value="userData.repsw"
 					placeholder="密码"
 					@updateTxt="
-					userData.repsw = $event
-					check(2)
-				"
+						userData.repsw = $event
+						check(2)
+					"
 					:showWarn="iptRule.psw"
 					type="password"
 					v-show="theme == 2"
 				></ipt>
 			</div>
 
-			<div class="login-btn" @click="login" v-show="theme === 0 || theme === 3">登录</div>
+			<div class="login-btn" @click="login" v-show="theme === 0 || theme === 3">
+				登录
+			</div>
 			<div class="login-btn" v-show="theme === 1">修改</div>
 			<div class="login-btn" v-show="theme === 2" @click="register()">注册</div>
 			<div class="change-type-box">
@@ -80,10 +82,13 @@
 		</el-form>
 		<div class="desc">
 			<div class="left">
-				<div class="title">趴趴英语， 一站式备考服务</div>
+				<div class="title">学考大师， 超级社区</div>
 				<div class="con">
 					收录10000+道出国留学类考试真题、权威模拟题、独家试题
-					<br />提供全方位在线练习方式，搭配独家解析，名师答疑互动，高效率加速你的备考
+					<br />
+					提供全方位在线练习方式，搭配独家解析，名师答疑互动，高效率加速你的备考
+					<br />
+					免费为学生提供交流学习的沟通平台，联系客服VX：dwwy688进群交流
 				</div>
 			</div>
 			<div class="right">
@@ -98,7 +103,7 @@ import ipt from '@/components/ipt'
 import { login, register } from '@/server/api'
 export default {
 	components: {
-		ipt,
+		ipt
 	},
 	computed: {},
 	data: () => {
@@ -108,14 +113,14 @@ export default {
 				name: '',
 				psw: '',
 				vertical: '',
-				repsw: '',
+				repsw: ''
 			},
 			iptRule: {
 				name: false,
 				psw: false,
 				vertical: false,
-				repsw: false,
-			},
+				repsw: false
+			}
 		}
 	},
 	methods: {
@@ -158,7 +163,7 @@ export default {
 		login() {
 			login({
 				phone_number: this.userData.name,
-				password: this.userData.psw,
+				password: this.userData.psw
 			}).then((res) => {
 				localStorage.token = res.token
 				this.$router.replace('/')
@@ -168,32 +173,32 @@ export default {
 			if (!this.userData.name) {
 				this.$message({
 					type: 'warning',
-					message: '请输入用户名',
+					message: '请输入用户名'
 				})
 				return
 			}
 			if (!this.userData.psw) {
 				this.$message({
 					type: 'warning',
-					message: '请输入密码',
+					message: '请输入密码'
 				})
 				return
 			}
 			if (this.userData.psw != this.userData.repsw) {
 				this.$message({
 					type: 'warning',
-					message: '两次密码不一致',
+					message: '两次密码不一致'
 				})
 				return
 			}
 			register({
 				phone_number: this.userData.name,
-				password: this.userData.psw,
+				password: this.userData.psw
 			}).then((res) => {
 				this.theme = 0
 				console.log(res)
 			})
-		},
+		}
 	},
 	filters: {
 		// 控制theme文字
@@ -208,8 +213,8 @@ export default {
 				case 3:
 					return '验证码快捷登录'
 			}
-		},
-	},
+		}
+	}
 }
 </script>
 
@@ -220,8 +225,8 @@ export default {
 	width: 1150px;
 	.imgBox {
 		width: 100%;
-		height: 360px;
-		background: url('../../assets/login_bg.png') no-repeat;
+		height: 340px;
+		background: url('../../assets/bg_lg.jpg') no-repeat;
 		background-size: cover;
 	}
 	.loginBox {
