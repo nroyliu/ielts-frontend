@@ -146,7 +146,10 @@
 									</div>
 								</el-collapse-item>
 							</el-collapse>
-							<div class="pop"></div>
+							<div
+								class="pop"
+								v-if="~shouldPay.indexOf(paper[index][0].material_id)"
+							></div>
 							<div
 								class="unlockButton"
 								v-if="~shouldPay.indexOf(paper[index][0].material_id)"
