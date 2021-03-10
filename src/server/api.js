@@ -39,5 +39,9 @@ export const login = data => axios.post(`/exam/login`, data)
 
 // 注册
 export const register = data => axios.post(`/exam/register`, data)
+
 // 获取用户信息
 export const userinfo = data => axios.get(`/exam/userinfo`, data)
+
+// 激活题目
+export const activeTopic = data => axios.post(`/exam/card`, data)

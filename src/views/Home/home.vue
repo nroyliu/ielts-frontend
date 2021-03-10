@@ -100,7 +100,7 @@
 										style="right: -4em;"
 									>
 										<div class="triangle"></div>
-										付费购买
+										{{ item.tag }}
 									</div>
 								</div>
 							</div>
@@ -113,7 +113,7 @@
 							</div>
 							<el-collapse>
 								<el-collapse-item
-									:disabled="!!~shouldPay.indexOf(paper[index].material_id)"
+									:disabled="!!~shouldPay.indexOf(paper[index][0].material_id)"
 									v-for="(item1, index1) in item"
 									:key="index1"
 								>
@@ -146,9 +146,10 @@
 									</div>
 								</el-collapse-item>
 							</el-collapse>
+							<div class="pop"></div>
 							<div
 								class="unlockButton"
-								v-if="!!~shouldPay.indexOf(paper[index].material_id)"
+								v-if="~shouldPay.indexOf(paper[index][0].material_id)"
 								@click="showPop()"
 							>
 								付费购买解锁
@@ -183,8 +184,19 @@
 			</h3>
 			<div data-v-138e3a4c="" class="activationCodeBox">
 				<div data-v-138e3a4c="" class="inputBox">
-					<input data-v-138e3a4c="" type="text" placeholder="请输入激活码" />
-					<button data-v-138e3a4c="" class="submitButton">提交</button>
+					<input
+						data-v-138e3a4c=""
+						type="text"
+						v-model="activationCode"
+						placeholder="请输入激活码"
+					/>
+					<button
+						data-v-138e3a4c=""
+						@click="activeTopic()"
+						class="submitButton"
+					>
+						提交
+					</button>
 				</div>
 			</div>
 			<div data-v-138e3a4c="" class="introduce">
@@ -212,7 +224,13 @@
 <script>
 import header from '@/components/Header'
 import right from './right'
-import { getSub, getOriginalOptions, getPaper, startExam } from '@/server/api'
+import {
+	getSub,
+	getOriginalOptions,
+	getPaper,
+	startExam,
+	activeTopic
+} from '@/server/api'
 export default {
 	components: {
 		'com-header': header,
@@ -226,7 +244,8 @@ export default {
 			currentOri: '',
 			paper: [],
 			shouldPay: [],
-			showIptPop: false
+			showIptPop: false,
+			activationCode: ''
 		}
 	},
 	methods: {
@@ -258,10 +277,13 @@ export default {
 			getOriginalOptions().then((res) => {
 				this.originOption = res
 				let arr = res.filter((item) => item.is_need_unlock === 1)
+				this.shouldPay = []
 				arr.forEach((item) => {
 					this.shouldPay.push(item.id)
 				})
 				this.getPaper()
+
+				console.log(this.shouldPay)
 			})
 		},
 		getPaper() {
@@ -296,6 +318,19 @@ export default {
 		},
 		showPop() {
 			this.showIptPop = true
+		},
+		activeTopic() {
+			activeTopic({
+				card: this.activationCode
+			}).then((res) => {
+				console.log(res)
+				this.$message({
+					type: 'success',
+					message: res.message
+				})
+				this.getOriginalOptions()
+				this.showIptPop = false
+			})
 		}
 	},
 	filters: {
@@ -463,6 +498,14 @@ export default {
 			}
 			.most-test {
 				position: relative;
+				.pop {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background: rgba(255, 255, 255, 0.5);
+				}
 				.item-paper {
 					display: flex;
 					height: 75px;
@@ -510,6 +553,7 @@ export default {
 					margin-left: -60px;
 					left: 50%;
 					cursor: pointer;
+					z-index: 1;
 				}
 			}
 		}
