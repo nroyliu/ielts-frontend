@@ -1,24 +1,77 @@
 <template>
-	<div class="header">
-		<div class="user">
-			<img src="../../assets/icon-user.svg" alt />
-			<span>XXXX XXXXX - 123456</span>
+	<div>
+		<audio src="../../assets/test.mp3" ref="audio"></audio>
+		<div class="header">
+			<div class="user">
+				<img src="../../assets/icon-user.svg" alt />
+				<span>XXXX XXXXX - 123456</span>
+			</div>
+			<div>
+				<div
+					class="time"
+					v-if="currentSection === 'sound' && getPath === '/main/testSound'"
+				>
+					<img class="img-sound" src="../../assets/play.svg" alt="" />
+					<div class="progress">
+						<el-slider
+							v-model="value3"
+							@change="change"
+							:show-tooltip="false"
+						></el-slider>
+					</div>
+				</div>
+			</div>
+			<div class="action">
+				<el-button @click="finnishCur">Finish section</el-button>
+				<el-button @click="showQRCode">Help</el-button>
+				<el-button>Hide</el-button>
+			</div>
 		</div>
-		<div class="time">
-			<!-- <audio src=""></audio> -->
-		</div>
-		<div class="action">
-			<el-button @click="finnishCur">Finish section</el-button>
-			<el-button>Help</el-button>
-			<el-button>Hide</el-button>
-		</div>
+		<el-dialog :modal="false" :visible.sync="wxCodeShow" width="30%">
+			<div class="wxQrCode">
+				<img src="../../assets/wx.jpg" alt="" />
+			</div>
+			<h3 slot="title">
+				请微信扫描二维码联系老师
+			</h3>
+			<!-- <span slot="footer" class="dialog-footer">
+				<el-button @click="wxCodeShow = false">取 消</el-button>
+				<el-button type="primary" @click="wxCodeShow = false">
+					确 定
+				</el-button>
+			</span> -->
+		</el-dialog>
 	</div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
 	data() {
-		return {}
+		return {
+			wxCodeShow: false,
+			value3: 80,
+			currentSection: ''
+		}
+	},
+	computed: {
+		...mapState(['isPlay']),
+		getPath() {
+			let path = ''
+			path = this.$route.path
+			return path
+		}
+	},
+	watch: {
+		'$store.state.isPlay': {
+			handler(val) {
+				if (val) {
+					this.$refs.audio.play()
+				} else {
+					this.$refs.audio.pause()
+				}
+			}
+		}
 	},
 	methods: {
 		finnishCur() {
@@ -36,13 +89,36 @@ export default {
 			} else {
 				this.$router.replace({ path: '/analysis', query: this.$route.query.id })
 			}
+		},
+		showQRCode() {
+			this.wxCodeShow = true
+		},
+		change(e) {
+			this.$refs.audio.volume = e / 100
 		}
 	},
-	mounted() {}
+	mounted() {
+		this.currentSection = sessionStorage.currentSection
+			? JSON.parse(sessionStorage.currentSection)
+			: ''
+	}
 }
 </script>
 
 <style lang="less" scoped>
+audio {
+	width: 300px;
+	height: 30px;
+}
+
+.wxQrCode img {
+	max-width: 300px;
+	max-height: 300px;
+}
+.img-sound {
+	width: 43px;
+	height: 32px;
+}
 .header {
 	position: relative;
 	z-index: 100;
@@ -67,5 +143,13 @@ export default {
 			font-size: 20px;
 		}
 	}
+}
+.time {
+	display: flex;
+	align-items: center;
+}
+.progress {
+	margin-left: 20px;
+	width: 150px;
 }
 </style>

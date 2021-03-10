@@ -3,68 +3,62 @@
 		<com-header></com-header>
 		<div class="content">
 			<div class="left">
-				<div data-v-54a1a05d="" class="top">
-					<div data-v-54a1a05d="" class="score-box">
-						<div data-v-54a1a05d="" class="top-left">
-							<div
-								data-v-54a1a05d=""
-								class="practice-time"
-								style="margin-right: 50px;"
-							>
-								<div data-v-54a1a05d="" class="value">66</div>
-								<div data-v-54a1a05d="" class="title">练习次数</div>
+				<div class="top">
+					<div class="score-box">
+						<div class="top-left">
+							<div class="practice-time" style="margin-right: 50px;">
+								<div class="value">66</div>
+								<div class="title">练习次数</div>
 							</div>
-							<div data-v-54a1a05d="" class="average-total-score">
+							<div class="average-total-score">
 								<div
-									data-v-54a1a05d=""
 									style="color: red; font-size: 14px; line-height: 48px; height: 48px;"
 								>
 									请补充小分
 								</div>
-								<div data-v-54a1a05d="" class="title">平均总分</div>
+								<div class="title">平均总分</div>
 							</div>
 						</div>
-						<div data-v-54a1a05d="" class="divider"></div>
-						<div data-v-54a1a05d="" class="top-right">
-							<div data-v-54a1a05d="" class="line" style="margin-bottom: 40px;">
-								<div data-v-54a1a05d="" class="item">
-									<div data-v-54a1a05d="" class="key">
+						<div class="divider"></div>
+						<div class="top-right">
+							<div class="line" style="margin-bottom: 40px;">
+								<div class="item">
+									<div class="key">
 										听力
-										<span data-v-54a1a05d="" class="key-desc">(平均分数)</span>
+										<span class="key-desc">(平均分数)</span>
 									</div>
-									<div data-v-54a1a05d="" class="value">0</div>
-									<i data-v-54a1a05d="" class="iconfont "></i>
+									<div class="value">0</div>
+									<i class="iconfont "></i>
 								</div>
-								<div data-v-54a1a05d="" class="item">
-									<div data-v-54a1a05d="" class="key">
+								<div class="item">
+									<div class="key">
 										写作
-										<span data-v-54a1a05d="" class="key-desc">(平均分数)</span>
+										<span class="key-desc">(平均分数)</span>
 									</div>
-									<div data-v-54a1a05d="" class="value">0</div>
-									<i data-v-54a1a05d="" class="iconfont papa-personal_edit"></i>
+									<div class="value">0</div>
+									<i class="iconfont papa-personal_edit"></i>
 								</div>
 							</div>
-							<div data-v-54a1a05d="" class="line">
-								<div data-v-54a1a05d="" class="item">
-									<div data-v-54a1a05d="" class="key">
+							<div class="line">
+								<div class="item">
+									<div class="key">
 										阅读
-										<span data-v-54a1a05d="" class="key-desc">(平均分数)</span>
+										<span class="key-desc">(平均分数)</span>
 									</div>
-									<div data-v-54a1a05d="" class="value">0</div>
-									<i data-v-54a1a05d="" class="iconfont"></i>
+									<div class="value">0</div>
+									<i class="iconfont"></i>
 								</div>
-								<div data-v-54a1a05d="" class="item">
-									<div data-v-54a1a05d="" class="key">
+								<div class="item">
+									<div class="key">
 										口语
-										<span data-v-54a1a05d="" class="key-desc">(平均分数)</span>
+										<span class="key-desc">(平均分数)</span>
 									</div>
-									<div data-v-54a1a05d="" class="value">0</div>
-									<i data-v-54a1a05d="" class="iconfont papa-personal_edit"></i>
+									<div class="value">0</div>
+									<i class="iconfont papa-personal_edit"></i>
 								</div>
 							</div>
 						</div>
 						<i
-							data-v-54a1a05d=""
 							class="el-tooltip iconfont papa-question"
 							aria-describedby="el-tooltip-2990"
 							tabindex="0"

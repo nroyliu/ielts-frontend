@@ -12,7 +12,7 @@
 				sound.
 			</div>
 			<div style="width: 100%; text-align: center;">
-				<el-button type="info">Play sound</el-button>
+				<el-button type="info" @click="playAudio()">Play sound</el-button>
 			</div>
 
 			<div class="txt">
@@ -41,7 +41,14 @@ export default {
 				path: '/main/confirm',
 				query: { id: this.$route.query.id }
 			})
+		},
+		playAudio() {
+			this.$store.commit('setTestAudio', true)
 		}
+	},
+	beforeRouteLeave(to, from, next) {
+		this.$store.commit('setTestAudio', false)
+		next(true)
 	}
 }
 </script>

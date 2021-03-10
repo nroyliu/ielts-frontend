@@ -6,7 +6,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     task: [],
-    writeContent:{}
+    writeContent:{},
+    isPlay: false
   },
   mutations: {
     setTask(state, task) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     setWriteContent(state,txt){
       state.writeContent = txt
+    },
+    setTestAudio(state,payload){
+      state.isPlay = payload
     }
   },
   actions: {}

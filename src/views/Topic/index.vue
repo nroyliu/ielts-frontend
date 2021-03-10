@@ -1,17 +1,26 @@
 <template>
 	<div class="warapper">
 		<div class="audio" v-if="currentSection === 'sound' && topic.length > 0">
-			<audio id="audio" :src="audioUrl" @timeupdate="audioPlay"></audio>
-			<div class="btn">
-				<i class="el-icon-video-play" @click="play()" v-show="!isPlay"></i>
-				<i class="el-icon-video-pause" v-show="isPlay"></i>
-			</div>
+			<audio
+				ref="audio1"
+				id="audio"
+				:src="audioUrl"
+				@timeupdate="audioPlay"
+			></audio>
+
+			<img
+				ref="img"
+				class="img-sound"
+				@click="play()"
+				src="../../assets/play.svg"
+				alt=""
+			/>
 			<div class="progress">
-				<el-progress
-					:percentage="percentage"
-					color="#e6a23c"
-					:show-text="false"
-				></el-progress>
+				<el-slider
+					v-model="value3"
+					@change="change"
+					:show-tooltip="false"
+				></el-slider>
 			</div>
 		</div>
 		<div class="c_partBar col mb-2 title">
@@ -84,7 +93,8 @@ export default {
 			isPlay: false,
 			audioUrl: '',
 			percentage: 0,
-			clientHeight: 0
+			clientHeight: 0,
+			value3: 80
 		}
 	},
 	watch: {
@@ -107,11 +117,11 @@ export default {
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
-		console.log(this.currentSection)
 		this.audioUrl = this.topic[0].audio_url
 		setTimeout(() => {
 			this.audio = document.getElementById('audio')
 			this.audioUrl = this.topic[this.currentPart - 1].audio_url
+			this.$refs.img.click()
 		})
 		this.clientHeight = this.getClientHeight() * 0.65
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
@@ -123,7 +133,10 @@ export default {
 			if (this.audio != null) {
 				this.pause()
 				this.audioUrl = this.topic[this.currentPart - 1].audio_url
-				this.isPlay = false
+				// this.isPlay = true
+				setTimeout(() => {
+					this.play()
+				})
 			}
 			switch (this.currentSection) {
 				case 'sound':
@@ -141,7 +154,7 @@ export default {
 			this.percentage = rate * 100
 		},
 		play() {
-			if (this.isPlay) return
+			// if (this.isPlay) return
 			this.audio.play()
 			this.isPlay = true
 		},
@@ -163,6 +176,9 @@ export default {
 						: document.documentElement.clientHeight
 			}
 			return clientHeight
+		},
+		change(e) {
+			this.$refs.audio1.volume = e / 100
 		}
 	}
 }
@@ -193,6 +209,15 @@ export default {
 	.progress {
 		width: 250px;
 	}
+}
+
+.img-sound {
+	width: 43px;
+	height: 32px;
+}
+.progress {
+	margin-left: 20px;
+	width: 150px;
 }
 
 .single-page::-webkit-scrollbar {

@@ -185,35 +185,30 @@
 			<h3 slot="title">
 				请输入激活码
 			</h3>
-			<div data-v-138e3a4c="" class="activationCodeBox">
-				<div data-v-138e3a4c="" class="inputBox">
+			<div class="activationCodeBox">
+				<div class="inputBox">
 					<input
-						data-v-138e3a4c=""
 						type="text"
 						v-model="activationCode"
 						placeholder="请输入激活码"
 					/>
-					<button
-						data-v-138e3a4c=""
-						@click="activeTopic()"
-						class="submitButton"
-					>
+					<button @click="activeTopic()" class="submitButton">
 						提交
 					</button>
 				</div>
 			</div>
-			<div data-v-138e3a4c="" class="introduce">
-				<div data-v-138e3a4c="" class="title">激活码获取方式</div>
+			<div class="introduce">
+				<div class="title">激活码获取方式</div>
 				<!---->
-				<div data-v-138e3a4c="" class="mode" style="margin-top: 40px;">
+				<div class="mode" style="margin-top: 40px;">
 					<!---->
 					<!-- <div
-						data-v-138e3a4c=""
+						
 						class="modeCon"
 						style="justify-content: space-between;"
 					>
-						<div data-v-138e3a4c="">趴趴天猫旗舰店优惠购买</div>
-						<div data-v-138e3a4c="" class="buyButton">点此购买</div>
+						<div >趴趴天猫旗舰店优惠购买</div>
+						<div  class="buyButton">点此购买</div>
 					</div> -->
 					<div class="wxQrCode">
 						<img src="../../assets/wx.jpg" alt="" />

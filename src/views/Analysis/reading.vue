@@ -9,7 +9,9 @@
 							class="item"
 							:class="{ 'active-item': checkObj[item1.id] }"
 							@click="checkGroup(item1.id, index, item1)"
-						>Q{{ getSection(item1.questions) }}</div>
+						>
+							Q{{ getSection(item1.questions) }}
+						</div>
 					</div>
 				</div>
 			</div>
@@ -61,18 +63,27 @@
 						</div>
 					</div>
 
-					<div style="margin-top:10px" v-if="!~currentItem.questions[0].content.indexOf(']]')">
+					<div
+						style="margin-top:10px"
+						v-if="!~currentItem.questions[0].content.indexOf(']]')"
+					>
 						<div
 							style="font-size: 14px;color:#333;margin-bottom:10px"
 							v-for="(item, index) in currentItem.questions"
 							:key="index"
 						>
 							<div>
-								<span style="margin-right:10px" v-if="item.content">{{ getIndex(item.id) }}</span>
+								<span style="margin-right:10px" v-if="item.content">
+									{{ getIndex(item.id) }}
+								</span>
 								<span>{{ item.content }}</span>
 							</div>
 							<div v-if="item.content">
-								<div style="margin-left:15px" v-for="item1 in item.options" :key="item1.option">
+								<div
+									style="margin-left:15px"
+									v-for="item1 in item.options"
+									:key="item1.option"
+								>
 									<span>{{ item1.option }}</span>
 									<span style="margin-left:15px">{{ item1.text }}</span>
 								</div>
@@ -86,11 +97,12 @@
 								<span
 									style="margin-right: 10px"
 									class="wrong"
+									:class="{ success: getAnswer(item).bool }"
 									v-for="(item, index) in currentItem.questions"
 									:key="index"
 								>
 									<b>{{ getIndex(item.id) }}.</b>
-									{{ getAnswer(item) }}
+									{{ getAnswer(item).txt }}
 								</span>
 							</div>
 						</div>
@@ -112,7 +124,10 @@
 						<div class="analysis-title">解析</div>
 						<div class="analysis-con">
 							<div v-for="(item, index) in currentItem.questions" :key="index">
-								<pre style="margin-right: 10px; white-space: pre-line" class><b>{{ getIndex(item.id) }}. </b>{{item.analysis}} </pre>
+								<pre
+									style="margin-right: 10px; white-space: pre-line"
+									class
+								><b>{{ getIndex(item.id) }}. </b>{{item.analysis}} </pre>
 								<br />
 							</div>
 						</div>
@@ -137,13 +152,13 @@ export default {
 			isPlay: false,
 			audioInfo: {
 				duration: 0,
-				current: 0,
+				current: 0
 			},
 			ele: '',
 			showOriginal: false,
 			currentItem: {},
 			id: '',
-			userAnswer: '',
+			userAnswer: ''
 		}
 	},
 	methods: {
@@ -154,7 +169,7 @@ export default {
 				this.id = this.$utils.getSession('currentId')
 			}
 			getRead({
-				id: this.id,
+				id: this.id
 			}).then((res) => {
 				this.data = res
 				this.data.forEach((item, index) => {
@@ -197,69 +212,280 @@ export default {
 			return txt
 		},
 		disposeMarkdown(html) {
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!html.match(exampleRule)) {
+				html = html.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				html = html.replace(']]', '</span>')
+			}
+
+			// 两个ii
 			this.currentItem.questions.forEach((item) => {
-				this.userAnswer.answer.forEach((item1) => {
-					if (item.id === item1.question_id && item.is_correct) {
+				if (~html.indexOf('[i[=NO=]]') || ~html.indexOf('[ii[=NO=]')) {
+					let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+					if (html.match(rule) == null) return html
+					let flag = html.match(rule)[0]
+					console.log(flag)
+					if (~flag.indexOf('[ii[=NO=]')) {
+						let bool = false
+						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
+						this.userAnswer.answer.forEach((item1) => {
+							// 答了题
+							if (item.id === item1.question_id && item1.is_correct) {
+								html = html.replace(
+									flag,
+									`<span>${this.pagegationId.indexOf(item.id) +
+										1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-circle-check"></i></span>${text}<span>${this.pagegationId.indexOf(
+										item.id
+									) +
+										1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-circle-check"></i></span>`
+								)
+								bool = true
+							}
+							if (item.id === item1.question_id && !item1.is_correct) {
+								html = html.replace(
+									flag,
+									`<span>${this.pagegationId.indexOf(item.id) +
+										1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-el-icon-circle-close"></i></span>${text}<span>${this.pagegationId.indexOf(
+										item.id
+									) +
+										1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-el-icon-circle-close"></i></span>`
+								)
+								bool = true
+							}
+						})
+						if (bool) return
+						// 为空
 						html = html.replace(
-							'[i[=NO=]]',
-							`<span>${
-								this.pagegationId.indexOf(item.id) + 1
-							}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
-						)
-						html = html.replace(
-							'[d[=NO=]]',
-							`<span>${
-								this.pagegationId.indexOf(item.id) + 1
-							}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+							flag,
+							`<span>${this.pagegationId.indexOf(item.id) +
+								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>${text}<span>${this.pagegationId.indexOf(
+								item.id
+							) +
+								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
 						)
 						return
 					}
-				})
-				html = html.replace(
-					'[i[=NO=]]',
-					`<span>${
-						this.pagegationId.indexOf(item.id) + 1
-					}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-				)
-				html = html.replace(
-					'[d[=NO=]]',
-					`<span>${
-						this.pagegationId.indexOf(item.id) + 1
-					}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-				)
+
+					if (~flag.indexOf('[i[=NO=]')) {
+						let bool = false
+						//一个i
+						this.userAnswer.answer.forEach((item1) => {
+							// 答题了
+							if (item.id === item1.question_id && item1.is_correct) {
+								html = html.replace(
+									'[i[=NO=]]',
+									`<span>${this.pagegationId.indexOf(item.id) +
+										1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-circle-check"></i></span>`
+								)
+								bool = true
+							}
+							if (item.id === item1.question_id && !item1.is_correct) {
+								html = html.replace(
+									'[i[=NO=]]',
+									`<span>${this.pagegationId.indexOf(item.id) +
+										1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+										item1.answer
+									}  <i class="el-icon-el-icon-circle-close"></i></span>`
+								)
+								bool = true
+							}
+						})
+						if (bool) return
+						html = html
+							.replace(
+								flag,
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
+							)
+							.replace(']', '')
+						return
+					}
+				}
+				if (~html.indexOf('[d[=NO=]')) {
+					let bool = false
+					let rule = /\[d*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+					if (html.match(rule) == null) return html
+					let flag = html.match(rule)[0]
+					//一个i
+					this.userAnswer.answer.forEach((item1) => {
+						// 答题了
+						if (item.id === item1.question_id && item1.is_correct) {
+							html = html.replace(
+								'[d[=NO=]]',
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-circle-check"></i></span>`
+							)
+							bool = true
+						}
+						if (item.id === item1.question_id && !item1.is_correct) {
+							html = html.replace(
+								'[d[=NO=]]',
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-el-icon-circle-close"></i></span>`
+							)
+							bool = true
+						}
+					})
+					if (bool) return
+					html = html.replace(
+						flag + ']',
+						`<span>${this.pagegationId.indexOf(item.id) +
+							1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
+					)
+					return
+				}
 			})
 			return html
 		},
 		dispose2(html, item) {
-			this.userAnswer.answer.forEach((item1) => {
-				if (item.id === item1.question_id && item.is_correct) {
+			let exampleRule = /\[u\[(.*)\]\]/
+			if (!!html.match(exampleRule)) {
+				html = html.replace(
+					'[u[',
+					'<span style="border:1px solid #ccc;height:30px; line-height:30px; text-align:center;diplay:block">'
+				)
+				html = html.replace(']]', '</span>')
+			}
+			if (~html.indexOf('[i[=NO=]]') || ~html.indexOf('[ii[=NO=]')) {
+				let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+				if (html.match(rule) == null) return html
+				let flag = html.match(rule)[0]
+				if (~flag.indexOf('[ii[=NO=]')) {
+					let bool = false
+					let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
+					this.userAnswer.answer.forEach((item1) => {
+						// 答了题
+						if (item.id === item1.question_id && item1.is_correct) {
+							html = html.replace(
+								flag,
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-circle-check"></i></span>${text}<span>${this.pagegationId.indexOf(
+									item.id
+								) +
+									1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-circle-check"></i></span>`
+							)
+							bool = true
+						}
+						if (item.id === item1.question_id && !item1.is_correct) {
+							html = html.replace(
+								flag,
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-el-icon-circle-close"></i></span>${text}<span>${this.pagegationId.indexOf(
+									item.id
+								) +
+									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-el-icon-circle-close"></i></span>`
+							)
+							bool = true
+						}
+					})
+					if (bool) return html
+					// 为空
 					html = html.replace(
-						'[i[=NO=]]',
-						`<span>${
-							this.pagegationId.indexOf(item.id) + 1
-						}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
+						flag,
+						`<span>${this.pagegationId.indexOf(item.id) +
+							1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>${text}<span>${this.pagegationId.indexOf(
+							item.id
+						) +
+							1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
 					)
-					html = html.replace(
-						'[d[=NO=]]',
-						`<span>${
-							this.pagegationId.indexOf(item.id) + 1
-						}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-check"></i></span>`
-					)
-					return html
 				}
-			})
-			html = html.replace(
-				'[i[=NO=]]',
-				`<span>${
-					this.pagegationId.indexOf(item.id) + 1
-				}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-			)
-			html = html.replace(
-				'[d[=NO=]]',
-				`<span>${
-					this.pagegationId.indexOf(item.id) + 1
-				}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"><i class="el-icon-circle-close"></i></span>`
-			)
+
+				if (~flag.indexOf('[i[=NO=]')) {
+					let bool = false
+					//一个i
+					this.userAnswer.answer.forEach((item1) => {
+						// 答题了
+						if (item.id === item1.question_id && item1.is_correct) {
+							html = html.replace(
+								'[i[=NO=]]',
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-circle-check"></i></span>`
+							)
+							bool = true
+						}
+						if (item.id === item1.question_id && !item1.is_correct) {
+							html = html.replace(
+								'[i[=NO=]]',
+								`<span>${this.pagegationId.indexOf(item.id) +
+									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+									item1.answer
+								}  <i class="el-icon-el-icon-circle-close"></i></span>`
+							)
+							bool = true
+						}
+					})
+					if (bool) return html
+					html = html.replace(
+						flag + ']',
+						`<span>${this.pagegationId.indexOf(item.id) +
+							1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
+					)
+				}
+			}
+
+			if (~html.indexOf('[d[=NO=]')) {
+				let bool = false
+				let rule = /\[d*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+				if (html.match(rule) == null) return html
+				let flag = html.match(rule)[0]
+				//一个i
+				this.userAnswer.answer.forEach((item1) => {
+					// 答题了
+					if (item.id === item1.question_id && item1.is_correct) {
+						html = html.replace(
+							'[d[=NO=]]',
+							`<span>${this.pagegationId.indexOf(item.id) +
+								1}.  </span><span style="color:#29d087;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+								item1.answer
+							}  <i class="el-icon-circle-check"></i></span>`
+						)
+						bool = true
+					}
+					if (item.id === item1.question_id && !item1.is_correct) {
+						html = html.replace(
+							'[d[=NO=]]',
+							`<span>${this.pagegationId.indexOf(item.id) +
+								1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;">  ${
+								item1.answer
+							}  <i class="el-icon-el-icon-circle-close"></i></span>`
+						)
+						bool = true
+					}
+				})
+				if (bool) return html
+				html = html.replace(
+					flag + ']',
+					`<span>${this.pagegationId.indexOf(item.id) +
+						1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
+				)
+			}
 			return html
 		},
 		// 获取当前题号
@@ -268,7 +494,7 @@ export default {
 		},
 		readAnswer() {
 			readAnswer({
-				id: this.$utils.getSession('curInfo').id,
+				id: this.$utils.getSession('curInfo').id
 			}).then((res) => {
 				this.userAnswer = res
 				console.log(res)
@@ -276,13 +502,15 @@ export default {
 		},
 		getAnswer(item) {
 			let txt = ''
+			let bool = ''
 			this.userAnswer.answer.forEach((item1) => {
 				if (item1.question_id == item.id) {
 					txt = item1.answer
+					bool = item1.is_correct
 				}
 			})
-			return txt
-		},
+			return { txt, bool }
+		}
 	},
 	filters: {
 		realFormatSecond(second) {
@@ -295,7 +523,7 @@ export default {
 			} else {
 				return '00:00'
 			}
-		},
+		}
 	},
 	created() {
 		this.getListenAnalize()
@@ -310,7 +538,7 @@ export default {
 		link.href =
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
-	},
+	}
 }
 </script>
 
