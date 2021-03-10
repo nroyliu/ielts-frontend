@@ -2,7 +2,9 @@
 	<div class="wrappers">
 		<div class="img-box">
 			<img src="../../assets/test-sound.png" alt />
-			<div style="color: #212529; font-size: 14px;line-height:14px;">Test sound</div>
+			<div style="color: #212529; font-size: 14px;line-height:14px;">
+				Test sound
+			</div>
 		</div>
 		<div class="bc-box">
 			<div class="txt">
@@ -35,12 +37,12 @@ export default {
 	},
 	methods: {
 		routerTo() {
-			this.$router.push({
+			this.$router.replace({
 				path: '/main/confirm',
-				query: { id: this.$route.query.id },
+				query: { id: this.$route.query.id }
 			})
-		},
-	},
+		}
+	}
 }
 </script>
 

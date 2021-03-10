@@ -42,12 +42,12 @@ export default {
 				? JSON.parse(sessionStorage.currentSection)
 				: 'sound'
 			if (type == 'sound') {
-				this.$router.push({
+				this.$router.replace({
 					path: '/main/testSound',
 					query: { id: this.$route.query.id }
 				})
 			} else {
-				this.$router.push({
+				this.$router.replace({
 					path: '/main/confirm',
 					query: { id: this.$route.query.id }
 				})

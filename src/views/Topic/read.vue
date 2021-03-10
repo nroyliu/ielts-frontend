@@ -520,15 +520,17 @@ export default {
 	transition: all 0.5s;
 }
 
-.markdown-body table {
-	border: 1px solid #ccc;
+.markdown-body td {
+	border: 1px solid #212529;
 }
 
 .table {
 	padding: 0 15px;
 	box-sizing: border-box;
 	font-size: 14px;
-	color: #212529;
+}
+.table td {
+	border: 1px solid #212529;
 }
 
 .left-content {

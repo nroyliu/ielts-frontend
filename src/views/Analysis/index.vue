@@ -47,6 +47,7 @@
 						<div class="score-writing score-item">
 							<div class="item-name">写作</div>
 							<div class="writin-btn">去评分</div>
+							<div class="writin-btn" @click="showQRCode()">反馈</div>
 						</div>
 					</div>
 					<div class="average-score">
@@ -86,6 +87,20 @@
 				<writing v-if="currentIndex === 2"></writing>
 			</div>
 		</div>
+		<el-dialog :visible.sync="wxCodeShow" width="30%">
+			<div class="wxQrCode">
+				<img src="../../assets/wx.jpg" alt="" />
+			</div>
+			<h3 slot="title">
+				请微信扫描二维码联系老师
+			</h3>
+			<!-- <span slot="footer" class="dialog-footer">
+				<el-button @click="wxCodeShow = false">取 消</el-button>
+				<el-button type="primary" @click="wxCodeShow = false">
+					确 定
+				</el-button>
+			</span> -->
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -102,18 +117,26 @@ export default {
 	},
 	data() {
 		return {
-			currentIndex: 0
+			currentIndex: 0,
+			wxCodeShow: false
 		}
 	},
 	methods: {
 		tabSwitch(index) {
 			this.currentIndex = index
+		},
+		showQRCode() {
+			this.wxCodeShow = true
 		}
 	}
 }
 </script>
 
 <style lang="less" scoped>
+.wxQrCode img {
+	max-width: 300px;
+	max-height: 300px;
+}
 .p_center {
 	padding: 0 0 160px;
 	width: 100%;
