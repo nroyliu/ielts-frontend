@@ -117,12 +117,14 @@ export default {
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
 		this.currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
-		this.audioUrl = this.topic[0].audio_url
-		setTimeout(() => {
-			this.audio = document.getElementById('audio')
-			this.audioUrl = this.topic[this.currentPart - 1].audio_url
-			this.$refs.img.click()
-		})
+		if (currentSection == 'sound') {
+			setTimeout(() => {
+				this.audio = document.getElementById('audio')
+				this.audioUrl = this.topic[this.currentPart - 1].audio_url
+				this.$refs.img.click()
+			})
+		}
+
 		this.clientHeight = this.getClientHeight() * 0.65
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
