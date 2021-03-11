@@ -91,9 +91,21 @@
 					免费为学生提供交流学习的沟通平台，联系客服VX：dwwy688进群交流
 				</div>
 			</div>
-			<div class="right">
-				<img src="https://img.papaen.com/exam/login_pic.png" alt />
+			<div class="left" style="margin-right:0">
+				<!-- <div class="title">学考大师， 超级社区</div> -->
+				<div class="con">
+					我们真诚的欢迎各类留学，移民和教育资源机构合作
+					<br />
+					为学生提供更完善，更具权威的学习平台
+					<br />
+					让我们共同为教育事业做出我们的贡献。
+					<br />
+					合作请加客服：dwwy688了解更多合作形式
+				</div>
 			</div>
+			<!-- <div class="right">
+				<img src="https://img.papaen.com/exam/login_pic.png" alt />
+			</div> -->
 		</div>
 	</div>
 </template>
