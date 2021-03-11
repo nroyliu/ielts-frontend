@@ -176,10 +176,17 @@ export default {
 			login({
 				phone_number: this.userData.name,
 				password: this.userData.psw
-			}).then((res) => {
-				localStorage.token = res.token
-				this.$router.replace('/')
 			})
+				.then((res) => {
+					localStorage.token = res.token
+					this.$router.replace('/')
+				})
+				.catch((err) => {
+					this.$message({
+						type: 'error',
+						message: err.data.error
+					})
+				})
 		},
 		register() {
 			if (!this.userData.name) {
@@ -203,13 +210,22 @@ export default {
 				})
 				return
 			}
+			let m = this.$route.query.m ? this.$route.query.m : ''
 			register({
 				phone_number: this.userData.name,
-				password: this.userData.psw
-			}).then((res) => {
-				this.theme = 0
-				console.log(res)
+				password: this.userData.psw,
+				m
 			})
+				.then((res) => {
+					this.theme = 0
+					console.log(res)
+				})
+				.catch((err) => {
+					this.$message({
+						type: 'error',
+						message: '注册失败'
+					})
+				})
 		}
 	},
 	filters: {

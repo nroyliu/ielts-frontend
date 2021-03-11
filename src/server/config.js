@@ -116,6 +116,7 @@ instance.interceptors.request.use(
 		return Promise.resolve(config)
 	},
 	function (error) {
+		
 		this.$message({
 			message: error,
 			type: 'warning'
