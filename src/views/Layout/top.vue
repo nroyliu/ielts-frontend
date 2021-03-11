@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<audio src="../../assets/test.mp3" ref="audio"></audio>
+		<audio
+			src="https://ielts.papaen.com/media/soundcheck.11a6b88d.mp3"
+			ref="audio"
+		></audio>
 		<div class="header">
 			<div class="user">
 				<img src="../../assets/icon-user.svg" alt />
