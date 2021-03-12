@@ -254,12 +254,13 @@ export default {
 			startExam({
 				paper_id: id
 			}).then((res) => {
-				this.$router.push({
-					path: '/main',
-					query: {
-						id: id
-					}
-				})
+				// this.$router.push({
+				// 	path: '/main',
+				// 	query: {
+				// 		id: id
+				// 	}
+				// })
+				window.open(`http://${location.host}/main`)
 				sessionStorage.currentSection = JSON.stringify('sound')
 				this.$utils.setSession('currentId', id)
 				this.$utils.setSession('curInfo', res)

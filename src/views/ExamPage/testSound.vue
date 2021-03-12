@@ -41,6 +41,7 @@ export default {
 				path: '/main/confirm',
 				query: { id: this.$route.query.id }
 			})
+			sessionStorage.currentSection = JSON.stringify('sound')
 		},
 		playAudio() {
 			this.$store.commit('setTestAudio', true)

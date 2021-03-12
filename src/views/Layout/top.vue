@@ -103,7 +103,7 @@ export default {
 	mounted() {
 		this.currentSection = sessionStorage.currentSection
 			? JSON.parse(sessionStorage.currentSection)
-			: ''
+			: 'sound'
 	}
 }
 </script>

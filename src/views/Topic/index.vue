@@ -116,8 +116,10 @@ export default {
 	},
 	mounted() {
 		this.topic = this.$utils.getSession('topic')
-		this.currentSection = JSON.parse(sessionStorage.currentSection) || 'sound'
-		if (currentSection == 'sound') {
+		this.currentSection = sessionStorage.currentSection
+			? JSON.parse(sessionStorage.currentSection)
+			: 'sound'
+		if (this.currentSection == 'sound') {
 			setTimeout(() => {
 				this.audio = document.getElementById('audio')
 				this.audioUrl = this.topic[this.currentPart - 1].audio_url
