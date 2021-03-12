@@ -108,8 +108,12 @@
 								<div>{{ item[0].originName }}</div>
 							</div>
 							<el-collapse>
+								<!-- shouldPay[paper[index][0].material_id] 有值为需要付费  shouldPay[paper[index][0].material_id].is_need_unlock true 锁住 false 未锁-->
 								<el-collapse-item
-									:disabled="!!shouldPay[paper[index][0].material_id]"
+									:disabled="
+										!!shouldPay[paper[index][0].material_id] &&
+											shouldPay[paper[index][0].material_id].is_need_unlock
+									"
 									v-for="(item1, index1) in item"
 									:key="index1"
 								>
@@ -144,11 +148,17 @@
 							</el-collapse>
 							<div
 								class="pop"
-								v-if="shouldPay[paper[index][0].material_id]"
+								v-if="
+									shouldPay[paper[index][0].material_id] &&
+										shouldPay[paper[index][0].material_id].is_need_unlock
+								"
 							></div>
 							<div
 								class="unlockButton"
-								v-if="shouldPay[paper[index][0].material_id]"
+								v-if="
+									shouldPay[paper[index][0].material_id] &&
+										shouldPay[paper[index][0].material_id].is_need_unlock
+								"
 								@click="showPop()"
 							>
 								{{
