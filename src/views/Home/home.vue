@@ -94,11 +94,7 @@
 									:class="{ 'item_filter-active': currentOri === item.id }"
 								>
 									{{ item.name }}
-									<div
-										class="freeTag"
-										v-if="item.is_need_unlock"
-										style="right: -4em;"
-									>
+									<div class="freeTag" v-if="!!item.mode" style="right: -4em;">
 										<div class="triangle"></div>
 										{{ item.tag }}
 									</div>
@@ -113,7 +109,7 @@
 							</div>
 							<el-collapse>
 								<el-collapse-item
-									:disabled="!!~shouldPay.indexOf(paper[index][0].material_id)"
+									:disabled="!!shouldPay[paper[index][0].material_id]"
 									v-for="(item1, index1) in item"
 									:key="index1"
 								>
@@ -148,14 +144,18 @@
 							</el-collapse>
 							<div
 								class="pop"
-								v-if="~shouldPay.indexOf(paper[index][0].material_id)"
+								v-if="shouldPay[paper[index][0].material_id]"
 							></div>
 							<div
 								class="unlockButton"
-								v-if="~shouldPay.indexOf(paper[index][0].material_id)"
+								v-if="shouldPay[paper[index][0].material_id]"
 								@click="showPop()"
 							>
-								付费购买解锁
+								{{
+									shouldPay[paper[index][0].material_id].mode == 1
+										? '付费购买解锁'
+										: '限时免费解锁'
+								}}
 							</div>
 						</div>
 					</div>
@@ -241,7 +241,7 @@ export default {
 			currentType: '',
 			currentOri: '',
 			paper: [],
-			shouldPay: [],
+			shouldPay: {},
 			showIptPop: false,
 			activationCode: ''
 		}
@@ -275,14 +275,12 @@ export default {
 		getOriginalOptions() {
 			getOriginalOptions().then((res) => {
 				this.originOption = res
-				let arr = res.filter((item) => item.is_need_unlock === 1)
-				this.shouldPay = []
-				arr.forEach((item) => {
-					this.shouldPay.push(item.id)
+				this.originOption.forEach((item) => {
+					if (!!item.mode) {
+						this.shouldPay[item.id] = item
+					}
 				})
 				this.getPaper()
-
-				console.log(this.shouldPay)
 			})
 		},
 		getPaper() {
@@ -322,7 +320,6 @@ export default {
 			activeTopic({
 				card: this.activationCode
 			}).then((res) => {
-				console.log(res)
 				this.$message({
 					type: 'success',
 					message: res.message

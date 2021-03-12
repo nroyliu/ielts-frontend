@@ -1,7 +1,7 @@
 <template>
 	<div class="sound">
 		<!-- 单篇界面 -->
-		<div class="m-part" v-for="(item, index) in groups.groups" :key="index">
+		<div class="m-part" v-for="(item, index) in groups.groups" :key="item.id">
 			<div class="section">
 				Questions {{ getSection(groups.groups[index].questions) }}
 			</div>
@@ -14,7 +14,7 @@
 			>
 				<pre><div class="content markdown-body" v-html="getHtml(item.content,item)"></div></pre>
 				<div v-if="item.type === 32 && item.mode === 324">
-					<div v-for="(item1, index1) in item.questions" :key="index1">
+					<div v-for="item1 in item.questions" :key="item1.id">
 						<div v-html="getHtmlItem(item1.content, item1.id)"></div>
 					</div>
 				</div>
@@ -90,7 +90,8 @@ export default {
 			pagegation: [], // 题目id 列表
 			part: {}, //{part1:...part2:...}
 			answer: {},
-			fillIdList: [] //保存 填空 id 列表
+			fillIdList: [], //保存 填空 id 列表
+			doubleFillList: [] //双空
 		}
 	},
 	watch: {
@@ -108,15 +109,37 @@ export default {
 		link.href =
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
-
 		// 原生js操作
 		this.$nextTick(() => {
+			this.doubleFillList.forEach((item, index) => {
+				if (document.getElementsByName(item)) {
+					let eleList = document.getElementsByName(item)
+					eleList.forEach((item1) => {
+						item1.addEventListener('change', (e) => {
+							let id = item.replace('A', '')
+							this.mergeData({
+								[id]: `${document.getElementsByName(id)[0].value}|${
+									e.target.value
+								}`
+							})
+						})
+					})
+				}
+			})
 			this.fillIdList.forEach((item, index) => {
 				if (document.getElementsByName(item)) {
 					let eleList = document.getElementsByName(item)
 					eleList.forEach((item1) => {
 						item1.addEventListener('change', (e) => {
-							this.mergeData({ [item]: e.target.value })
+							if (~this.doubleFillList.indexOf(`${item}A`)) {
+								this.mergeData({
+									[item]: `${e.target.value}|${
+										document.getElementsByName(`${item}A`)[0].value
+									}`
+								})
+							} else {
+								this.mergeData({ [item]: e.target.value })
+							}
 						})
 					})
 				}
@@ -158,14 +181,16 @@ export default {
 									item1.id
 								}"  name="${item1.id}" placeholder="${this.getIndex(
 									item1.id
-								)}" /> ${text} <input type="text" class="ipt-listen" id="${
-									item1.id
-								}"  name="${item1.id}" placeholder="${this.getIndex(
+								)}" /> ${text} <input type="text" class="ipt-listen" id="${item1.id +
+									'A'}"  name="${item1.id + 'A'}" placeholder="${this.getIndex(
 									item1.id
 								)}" />`
 							)
 							if (!~this.fillIdList.indexOf(item1.id)) {
 								this.fillIdList.push(item1.id)
+							}
+							if (!~this.doubleFillList.indexOf(item1.id + 'A')) {
+								this.doubleFillList.push(item1.id + 'A')
 							}
 						} else {
 							txt = txt.replace(
@@ -221,7 +246,6 @@ export default {
 				arr.push(obj1)
 			}
 			answerData.answer = arr
-			console.log(answerData)
 			this.answerTopic(answerData)
 		},
 		answerTopic(obj) {

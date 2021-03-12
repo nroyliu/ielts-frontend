@@ -134,7 +134,7 @@ export default {
 		partChange(e) {
 			this.currentPart = +e
 			this.percentage = 0
-			if (this.audio != null) {
+			if (!!this.audio) {
 				this.pause()
 				this.audioUrl = this.topic[this.currentPart - 1].audio_url
 				// this.isPlay = true
