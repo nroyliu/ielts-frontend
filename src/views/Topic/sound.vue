@@ -68,11 +68,31 @@
 				</div>
 			</div>
 			<!-- 听力表格填写 -->
-			<div class="type34" v-if="item.type === 34 && item.mode !== 341">
+			<div
+				class="type34"
+				v-if="item.type === 34 && item.mode !== 341 && item.mode !== 345"
+			>
 				<listenImageTable
 					:item="groups.groups[index]"
 					@changeData="mergeData"
 				></listenImageTable>
+			</div>
+			<!-- 听力多项单选 -->
+			<div class="type34" v-if="item.type === 34 && item.mode == 345">
+				<div style="display:flex;">
+					<div class="part" v-if="!isRead">
+						<div
+							class="markdown-body"
+							v-html="getHtml(groups.groups[index].content, item)"
+						></div>
+					</div>
+					<div style="margin-left:100px">
+						<div v-for="item1 in item.options" :key="item1.text">
+							<span>{{ item1.option }}.</span>
+							<span>{{ item1.text }}</span>
+						</div>
+					</div>
+				</div>
 			</div>
 			<!-- 拖拽 -->
 			<div class="type34" v-if="item.type === 34 && item.mode == 341">
