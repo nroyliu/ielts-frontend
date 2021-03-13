@@ -7,7 +7,7 @@
 				v-for="item1 in item.options"
 				:key="item1.option"
 			>
-				{{ item1.text }}
+				<span v-html="item1.text"></span>
 			</el-radio>
 		</el-radio-group>
 		<el-radio-group v-model="radio" v-if="isReadType34" @change="selectChange">

@@ -359,11 +359,10 @@ export default {
 					if (txt.match(rule) == null) return txt
 					let flag = txt.match(rule)[0]
 					txt = txt.replace(
-						flag,
-						`<h5 style="margin:0 6px 15px">${this.pagegation.indexOf(item1.id) +
-							1}.</h5 ><div class="ondrag" style="margin:0 6px 15px" name="${
+						'[d[=NO=]]',
+						`<input type="text" style="width:100px;" class="ipt-listen" id="${
 							item1.id
-						}"  draggable="false" id="${item1.id}"></div>`
+						}"  name="${item1.id}" placeholder="${this.getIndex(item1.id)}" />`
 					)
 
 					if (!~this.fillIdList.indexOf(item1.id)) {
