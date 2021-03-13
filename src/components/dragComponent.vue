@@ -25,7 +25,6 @@
 <script>
 import marked from 'marked'
 const obj = {}
-let currentTag = null
 const eleMap = []
 let currentIndex = 0
 

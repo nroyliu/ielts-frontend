@@ -53,7 +53,9 @@
 						>
 							<div class="topic">
 								<div class="num">{{ getIndex(selectItem.id) }}</div>
-								<div class="topic-txt">{{ selectItem.content }}</div>
+								<div class="topic-txt">
+									{{ selectItem.content.replace('[d[=NO=]]', '') }}
+								</div>
 							</div>
 
 							<div
@@ -167,13 +169,9 @@ import mutipleChoice from '../../components/mutipleChoice'
 import { answerTopic } from '@/server/api'
 const eleMap = []
 
-const dragStart = (e) => {
-	// console.log(e)
-}
+const dragStart = (e) => {}
 
-const dragEnd = (e) => {
-	// console.log(e)
-}
+const dragEnd = (e) => {}
 
 function dragOver(e) {
 	e.preventDefault()
@@ -181,12 +179,9 @@ function dragOver(e) {
 
 function dragEnter(e) {
 	e.preventDefault()
-	// console.log(e)
 }
 
-function dragLeave(e) {
-	// console.log(e)
-}
+function dragLeave(e) {}
 
 export default {
 	components: { singleOption, listenImageTable, dragComponent, mutipleChoice },
@@ -247,58 +242,65 @@ export default {
 			// 针对拖拽单独处理
 			if (isMain) {
 				// 将 [d[=NO=]]转换为方框 保存可以drag的标签id
-				this.topic.groups.forEach((item1, index) => {
-					if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
-						let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
-						if (txt.match(rule) == null) return txt
-						let flag = txt.match(rule)[0]
-						if (~flag.indexOf('[ii[=NO=]')) {
-							let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
+				this.topic.groups.forEach((item, index) => {
+					item.questions.forEach((item1) => {
+						if (~txt.indexOf('[i[=NO=]]') || ~txt.indexOf('[ii[=NO=]')) {
+							let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
+							if (txt.match(rule) == null) return txt
+							let flag = txt.match(rule)[0]
+							if (~flag.indexOf('[ii[=NO=]')) {
+								let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
+								txt = txt.replace(
+									flag,
+									`<input type="text" class="ipt-listen" id="${
+										item1.id
+									}"  name="${item1.id}" placeholder="${this.getIndex(
+										item1.id
+									)}" /> ${text} <input type="text" class="ipt-listen" id="${
+										item1.id
+									}"  name="${item1.id}" placeholder="${this.getIndex(
+										item1.id
+									)}" />`
+								)
+								if (!~this.fillIdList.indexOf(item1.id)) {
+									this.fillIdList.push(item1.id)
+								}
+							} else {
+								txt = txt.replace(
+									'[i[=NO=]]',
+									`<input type="text" class="ipt-listen" id="${
+										item1.id
+									}"  name="${item1.id}" placeholder="${this.getIndex(
+										item1.id
+									)}" />`
+								)
+
+								if (!~this.fillIdList.indexOf(item1.id)) {
+									this.fillIdList.push(item1.id)
+								}
+							}
+						}
+						if (~txt.indexOf('[d[=NO=]]')) {
+							let rule = /\[d.*\]/
+							if (txt.match(rule) == null) return txt
+							let flag = txt.match(rule)[0]
 							txt = txt.replace(
 								flag,
-								`<input type="text" class="ipt-listen" id="${
+								`<div class="ondrag" name="${
 									item1.id
-								}"  name="${item1.id}" placeholder="${this.getIndex(
+								}" style="margin:0 6px 15px;display:block;width: 300px;text-align:center;"  draggable="false" id="${
 									item1.id
-								)}" /> ${text} <input type="text" class="ipt-listen" id="${
-									item1.id
-								}"  name="${item1.id}" placeholder="${this.getIndex(
-									item1.id
-								)}" />`
-							)
-							if (!~this.fillIdList.indexOf(item1.id)) {
-								this.fillIdList.push(item1.id)
-							}
-						} else {
-							txt = txt.replace(
-								'[i[=NO=]]',
-								`<input type="text" class="ipt-listen" id="${
-									item1.id
-								}"  name="${item1.id}" placeholder="${this.getIndex(
-									item1.id
-								)}" />`
+								}" >${this.getIndex(item1.id)}</div>`
 							)
 
 							if (!~this.fillIdList.indexOf(item1.id)) {
 								this.fillIdList.push(item1.id)
 							}
+							if (!~this.idDragList.indexOf(item1.id)) {
+								this.idDragList.push(item1.id)
+							}
 						}
-					}
-					if (~txt.indexOf('[d[=NO=]]')) {
-						let rule = /\[d.*\]/
-						if (txt.match(rule) == null) return txt
-						let flag = txt.match(rule)[0]
-						txt = txt.replace(
-							'[d[=NO=]]',
-							`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
-								item1.id
-							}" placeholder="${this.getIndex(item1.id)}" />`
-						)
-
-						if (!~this.fillIdList.indexOf(item1.id)) {
-							this.fillIdList.push(item1.id)
-						}
-					}
+					})
 				})
 			}
 			txt = txt.replaceAll('*', '')
@@ -338,7 +340,7 @@ export default {
 						}
 					} else {
 						txt = txt.replace(
-							flag + ']',
+							'[i[=NO=]]',
 							`<input type="text" style="width:100px;" class="ipt-listen" id="${
 								item1.id
 							}"  name="${item1.id}" placeholder="${this.getIndex(
@@ -357,10 +359,11 @@ export default {
 					if (txt.match(rule) == null) return txt
 					let flag = txt.match(rule)[0]
 					txt = txt.replace(
-						'[d[=NO=]]',
-						`<input type="text" class="ipt-listen" id="${item1.id}"  name="${
+						flag,
+						`<h5 style="margin:0 6px 15px">${this.pagegation.indexOf(item1.id) +
+							1}.</h5 ><div class="ondrag" style="margin:0 6px 15px" name="${
 							item1.id
-						}" placeholder="${this.getIndex(item1.id)}" />`
+						}"  draggable="false" id="${item1.id}"></div>`
 					)
 
 					if (!~this.fillIdList.indexOf(item1.id)) {
@@ -430,9 +433,7 @@ export default {
 		dragStart(index) {
 			this.currentIndex = index
 		},
-		checkBox(e) {
-			// console.log(e)
-		},
+		checkBox(e) {},
 		dispose(item) {
 			let txt = marked(item.content)
 			let exampleRule = /\[u\[(.*)\]\]/
@@ -466,7 +467,6 @@ export default {
 			'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'
 		document.head.appendChild(link)
 		this.content = this.topic.content
-		// console.log(this.content)
 		const dragables = document.querySelectorAll('.dragable')
 		dragables.forEach((el) => {
 			// 监听draggable的相关事件
@@ -502,6 +502,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ondrag {
+	display: block;
+	min-width: 80px;
+	min-height: 20px;
+	border: 1px solid #ccc;
+}
 .double-page::-webkit-scrollbar {
 	display: none;
 }

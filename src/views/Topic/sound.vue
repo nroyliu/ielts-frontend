@@ -51,6 +51,22 @@
 					</div>
 				</div>
 			</div>
+			<!-- 多选 -->
+			<div class="multipleChoice" v-if="item.type === 12 && item.mode === 0">
+				<div v-for="(item1, index1) in item.questions" :key="index1">
+					<div style="display: flex;align-items:center;">
+						<h3 style="margin-right: 10px">{{ getIndex(item1.id) }}</h3>
+						<div v-html="getHtml(item1.content)"></div>
+					</div>
+					<div style="padding-left:32px">
+						<mutipleChoice
+							:selection="1"
+							:item1="item1"
+							@changeData="mergeData"
+						></mutipleChoice>
+					</div>
+				</div>
+			</div>
 			<!-- 听力表格填写 -->
 			<div class="type34" v-if="item.type === 34 && item.mode !== 341">
 				<listenImageTable
@@ -74,11 +90,13 @@ import singleOption from '../../components/singleOption'
 import listenImageTable from '../../components/listenImageTable'
 import dragComponent from '../../components/dragComponent'
 import { answerTopic } from '@/server/api'
+import mutipleChoice from '../../components/mutipleChoice'
 export default {
 	components: {
 		singleOption,
 		listenImageTable,
-		dragComponent
+		dragComponent,
+		mutipleChoice
 	},
 	props: {
 		groups: Object //保存part数据

@@ -13,6 +13,7 @@
 							: isDisable
 						: false
 				"
+				style="display:block;"
 			>
 				{{ checkItem.text }}
 			</el-checkbox>
@@ -23,7 +24,13 @@
 <script>
 export default {
 	props: {
-		item1: Object
+		item1: Object,
+		selection: {
+			type: Number,
+			default() {
+				return 2
+			}
+		}
 	},
 	data() {
 		return {
@@ -33,7 +40,7 @@ export default {
 	},
 	methods: {
 		change(e) {
-			if (this.checkList.length > 2) {
+			if (this.checkList.length > this.item1.answer.length - 1) {
 				this.isDisable = true
 				const obj = { [this.item1.id]: this.checkList.sort().join('') }
 				this.$emit('changeData', obj)
