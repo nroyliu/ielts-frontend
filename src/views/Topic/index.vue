@@ -1,5 +1,5 @@
 <template>
-	<div class="warapper">
+	<div class="warapper" @click="litemClick">
 		<div class="audio" v-if="currentSection === 'sound' && topic.length > 0">
 			<audio
 				ref="audio1"
@@ -68,7 +68,7 @@
 				></write>
 			</div>
 		</div>
-		<foot @partChange="partChange"></foot>
+		<foot :parentPage="parentPage" @partChange="partChange"></foot>
 	</div>
 </template>
 
@@ -93,6 +93,7 @@ export default {
 			isPlay: false,
 			audioUrl: '',
 			percentage: 0,
+			parentPage: 0,
 			clientHeight: 0,
 			value3: 80
 		}
@@ -131,6 +132,12 @@ export default {
 		// this.$refs.sound.groups = this.topic[this.currentPart - 1]
 	},
 	methods: {
+		litemClick(e) {
+			const id = Number(e.target.id)
+			if (id) {
+				this.parentPage = id
+			}
+		},
 		partChange(e) {
 			this.currentPart = +e
 			this.percentage = 0

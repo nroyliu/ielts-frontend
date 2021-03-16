@@ -6,7 +6,7 @@
 			</div>
 			<div class="txt">Review</div>-->
 		</div>
-		<div class="m-option-list">
+		<div class="m-option-list" ref="optionList">
 			<ul v-for="(item, index) in topic" :key="index">
 				<li class="m-part">Part{{ index + 1 }}:</li>
 				<li class v-for="(item, index1) in topic[index].groups" :key="index1">
@@ -60,6 +60,10 @@
 export default {
 	filter: {},
 	props: {
+		parentPage: {
+			type: Number,
+			default: 1
+		}
 		// topic
 	},
 	data() {
@@ -68,6 +72,12 @@ export default {
 			pagegation: [],
 			currentPage: 1,
 			part: {}
+		}
+	},
+	watch: {
+		parentPage: function(val) {
+			this.currentPage = val
+			this.$refs.optionList.scrollLeft = this.$refs[val][0].offsetLeft - window.innerWidth/2
 		}
 	},
 	mounted() {
