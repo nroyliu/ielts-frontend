@@ -107,7 +107,7 @@
 							<div class="model_title">
 								<div>{{ item[0].originName }}</div>
 							</div>
-							<el-collapse>
+							<el-collapse v-model="activeNames">
 								<!-- shouldPay[paper[index][0].material_id] 有值为需要付费  shouldPay[paper[index][0].material_id].is_need_unlock true 锁住 false 未锁-->
 								<el-collapse-item
 									:disabled="
@@ -116,6 +116,7 @@
 									"
 									v-for="(item1, index1) in item"
 									:key="index1"
+									:name="index1"
 								>
 									<template #title>
 										<div
@@ -253,7 +254,8 @@ export default {
 			paper: [],
 			shouldPay: {},
 			showIptPop: false,
-			activationCode: ''
+			activationCode: '',
+			activeNames: ['1']
 		}
 	},
 	methods: {
