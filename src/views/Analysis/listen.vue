@@ -60,7 +60,6 @@
 							:key="item1.id"
 							v-html="dispose2(getHtml(item1.content), item1)"
 						></div>
-
 						<div>
 							<div v-for="(item, index) in currentItem.options" :key="index">
 								<span class="txt">{{ item.option }}</span>
@@ -228,7 +227,6 @@ export default {
 					let rule = /\[i*\[\=NO\=\]((.*)\[\=NO\=\]\])?/
 					if (html.match(rule) == null) return html
 					let flag = html.match(rule)[0]
-					console.log(flag)
 					if (~flag.indexOf('[ii[=NO=]')) {
 						let bool = false
 						let text = flag.replace('[ii[=NO=]', '').replace('[=NO=]]', '')
@@ -305,14 +303,15 @@ export default {
 							}
 						})
 						if (bool) return
+
 						html = html
 							.replace(
-								flag,
+								'[i[=NO=]]',
 								`<span>${this.pagegationId.indexOf(item.id) +
 									1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
 							)
-							.replace(']', '')
-						return
+							// .replace(']', '')
+						return html
 					}
 				}
 				if (~html.indexOf('[d[=NO=]')) {
@@ -436,6 +435,7 @@ export default {
 						) +
 							1}.  </span><span style="color:#ff4c4c;min-width:60px;border-bottom:1px dashed #999;text-align:right;"> <i class="el-icon-circle-close"></i></span>`
 					)
+					return html
 				}
 
 				if (~flag.indexOf('[i[=NO=]')) {
